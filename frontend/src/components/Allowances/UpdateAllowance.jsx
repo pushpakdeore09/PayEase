@@ -50,6 +50,8 @@ const UpdateAllowance = () => {
   });
 
   const handleUpdate = (values) => {
+    console.log(values);
+    
     try {
     } catch (error) {}
   };
