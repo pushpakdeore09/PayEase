@@ -3,7 +3,6 @@ import apiClient from "./apiClient";
 export const signup = async (registerUser) => {
     try {
         const response = await apiClient.post('/signup', registerUser)
-        console.log("Signup response", response);
         return response.data;
         
     } catch (error) {

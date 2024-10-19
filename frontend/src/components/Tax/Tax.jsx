@@ -32,10 +32,10 @@ const Tax = () => {
     setSearchInput(event.target.value);
   };
   const handleSearchTax = async () => {
+    setSearchAttempted(true);
     try {
       const response = await getTaxByEmployeeId(searchInput);
       setTaxes(response.data);
-      console.log(response);
     } catch (error) {
       toast.error(error.response.data, {autoClose: 2000});
     }

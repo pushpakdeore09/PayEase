@@ -17,7 +17,6 @@ import { deleteAllowance, getAllowanceByEmployeeId } from "../api/allowanceApi";
 import { toast } from "react-toastify";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { deleteDeduction } from "../api/deductionApi";
 
 const Allowances = () => {
   const navigate = useNavigate();
@@ -34,6 +33,8 @@ const Allowances = () => {
     try {
       const response = await getAllowanceByEmployeeId(searchInput);
       const allowanceData = response.data;
+      console.log(allowanceData);
+      
       setAllowances(allowanceData);
     } catch (error) {
       toast.error(error.response.data, { autoClose: 2000 });
@@ -45,7 +46,7 @@ const Allowances = () => {
   };
 
   const handleUpdate = (allowanceId, employeeId) => {
-    navigate(`/allowance/${employeeId}/${allowanceId}`)
+    navigate(`/allowance/${employeeId}/${allowanceId}`);
   };
 
   const handleDelete = async (allowanceId) => {
@@ -192,7 +193,12 @@ const Allowances = () => {
                     <TableCell>
                       <EditIcon
                         color="primary"
-                        onClick={() => handleUpdate(allowance.allowanceId, allowance.employeeId)}
+                        onClick={() =>
+                          handleUpdate(
+                            allowance.allowanceId,
+                            allowance.employee.employeeId
+                          )
+                        }
                         style={{ cursor: "pointer" }}
                       />
                     </TableCell>

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
@@ -69,6 +70,24 @@ public class AllowanceService {
             return new ResponseEntity<>("Allowance not found", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(allowance, HttpStatus.OK);
-
     }
+
+    public ResponseEntity<?> editAllowanceDetails(AllowanceDTO allowanceDTO) {
+        Integer allowanceId = allowanceDTO.getAllowanceId();
+
+        Optional<Allowances> allowanceOptional = allowanceRepository.findById(allowanceId);
+        if (allowanceOptional.isEmpty()) {
+            return new ResponseEntity<>("Allowance not found", HttpStatus.BAD_REQUEST);
+        }
+        Employee employee = employeeService.findByEmployeeId(allowanceDTO.getEmployeeId());
+        Allowances existingAllowance = allowanceOptional.get();
+
+        existingAllowance.setAllowanceName(allowanceDTO.getAllowanceName());
+        existingAllowance.setEmployee(employee);
+        existingAllowance.setAllowanceType(allowanceDTO.getAllowanceType());
+        existingAllowance.setAllowancePercentage(allowanceDTO.getAllowancePercentage());
+        allowanceRepository.save(existingAllowance);
+        return new ResponseEntity<>("Allowance updated Successfully", HttpStatus.OK);
+    }
+
 }

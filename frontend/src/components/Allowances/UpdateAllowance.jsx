@@ -9,20 +9,16 @@ import * as Yup from "yup";
 import { Field, Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { getAllowance, updateAllowance } from "../api/allowanceApi";
+import { toast } from "react-toastify";
 
 const UpdateAllowance = () => {
-    
   const navigate = useNavigate();
   const allowanceTypes = ["Recurring Allowance", "One-Time Allowance"];
-  const { allowanceId } = useParams();
+
+  const { employeeId, allowanceId } = useParams();
   const [allowance, setAllowance] = useState(null);
 
-  const initialValues = {
-    allowanceName: allowance.allowanceName || "",
-    employeeId: allowance.employeeId || "",
-    allowanceType: allowance.allowanceType || "",
-    allowancePercentage: allowance.allowancePercentage || "",
-  };
   const validationSchema = Yup.object().shape({
     allowanceName: Yup.string()
       .required("Allowance name is required")
@@ -36,28 +32,41 @@ const UpdateAllowance = () => {
       .min(0, "Allowance percentage cannot be negative")
       .max(100, "Allowance percentage cannot exceed 100"),
   });
+
   useEffect(() => {
-    const getAllowance = async (allowanceId) => {
+    const fetchAllowance = async () => {
       try {
         const response = await getAllowance(allowanceId);
-        console.log(response);
-        
-        setAllowance(response);
+        setAllowance(response.data);
       } catch (error) {
-        console.log(error);
+        console.error(error);
+        toast.error("Failed to fetch allowance data", { autoClose: 2000 });
       }
     };
-  });
+    fetchAllowance();
+  }, [allowanceId]);
 
-  const handleUpdate = (values) => {
-    console.log(values);
-    
+  const handleUpdate = async (values) => {
+    const updatedValues = {
+      ...values,
+      allowanceId: allowanceId,
+    };
     try {
-    } catch (error) {}
+      const response = await updateAllowance(updatedValues);
+      toast.success(response.data, { autoClose: 2000 });
+    } catch (error) {
+      console.log(error);
+
+      toast.error(error.response?.data || "Failed to update allowance", {
+        autoClose: 2000,
+      });
+    }
   };
+
   const handleBack = () => {
-    navigate(-1); 
+    navigate(-1);
   };
+
   return (
     <div className="flex flex-col p-4 space-y-6">
       <Typography variant="h4" className="text-3xl font-bold mb-4">
@@ -65,87 +74,94 @@ const UpdateAllowance = () => {
       </Typography>
       <Divider sx={{ height: 4, bgcolor: "gray" }} />
 
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleUpdate}
-      >
-        {({ handleSubmit, touched, errors }) => (
-          <Form className="grid grid-cols-2 gap-6" onSubmit={handleSubmit}>
-            <div>
-              <Field
-                as={TextField}
-                fullWidth
-                label="Allowance Name"
-                name="allowanceName"
-                variant="outlined"
-                error={touched.allowanceName && !!errors.allowanceName}
-                helperText={touched.allowanceName && errors.allowanceName}
-              />
-            </div>
-            <div>
-              <Field
-                as={TextField}
-                fullWidth
-                label="Employee ID"
-                name="employeeId"
-                variant="outlined"
-                error={touched.employeeId && !!errors.employeeId}
-                helperText={touched.employeeId && errors.employeeId}
-              />
-            </div>
+      {allowance && (
+        <Formik
+          initialValues={{
+            allowanceName: allowance.allowanceName || "",
+            employeeId: allowance.employee?.employeeId || "",
+            allowanceType: allowance.allowanceType || "",
+            allowancePercentage: allowance.allowancePercentage || "",
+          }}
+          validationSchema={validationSchema}
+          onSubmit={handleUpdate}
+        >
+          {({ handleSubmit, touched, errors }) => (
+            <Form className="grid grid-cols-2 gap-6" onSubmit={handleSubmit}>
+              <div>
+                <Field
+                  as={TextField}
+                  fullWidth
+                  label="Allowance Name"
+                  name="allowanceName"
+                  variant="outlined"
+                  error={touched.allowanceName && !!errors.allowanceName}
+                  helperText={touched.allowanceName && errors.allowanceName}
+                />
+              </div>
+              <div>
+                <Field
+                  as={TextField}
+                  fullWidth
+                  label="Employee ID"
+                  name="employeeId"
+                  variant="outlined"
+                  error={touched.employeeId && !!errors.employeeId}
+                  helperText={touched.employeeId && errors.employeeId}
+                />
+              </div>
 
-            <div>
-              <Field
-                as={TextField}
-                fullWidth
-                select
-                label="Allowance Type"
-                name="allowanceType"
-                variant="outlined"
-                error={touched.allowanceType && !!errors.allowanceType}
-                helperText={touched.allowanceType && errors.allowanceType}
-              >
-                <MenuItem value="">Select Allowance Type</MenuItem>
-                {allowanceTypes.map((allowanceType, index) => (
-                  <MenuItem key={index} value={allowanceType}>
-                    {allowanceType}
-                  </MenuItem>
-                ))}
-              </Field>
-            </div>
-            <div>
-              <Field
-                as={TextField}
-                fullWidth
-                label="Allowance Percentage"
-                name="allowancePercentage"
-                type="number"
-                variant="outlined"
-                error={
-                  touched.allowancePercentage && !!errors.allowancePercentage
-                }
-                helperText={
-                  touched.allowancePercentage && errors.allowancePercentage
-                }
-              />
-            </div>
+              <div>
+                <Field
+                  as={TextField}
+                  fullWidth
+                  select
+                  label="Allowance Type"
+                  name="allowanceType"
+                  variant="outlined"
+                  error={touched.allowanceType && !!errors.allowanceType}
+                  helperText={touched.allowanceType && errors.allowanceType}
+                >
+                  <MenuItem value="">Select Allowance Type</MenuItem>
+                  {allowanceTypes.map((allowanceType, index) => (
+                    <MenuItem key={index} value={allowanceType}>
+                      {allowanceType}
+                    </MenuItem>
+                  ))}
+                </Field>
+              </div>
+              <div>
+                <Field
+                  as={TextField}
+                  fullWidth
+                  label="Allowance Percentage"
+                  name="allowancePercentage"
+                  type="number"
+                  variant="outlined"
+                  error={
+                    touched.allowancePercentage && !!errors.allowancePercentage
+                  }
+                  helperText={
+                    touched.allowancePercentage && errors.allowancePercentage
+                  }
+                />
+              </div>
 
-            <div className="col-span-2 flex justify-center space-x-4">
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={handleBack}
-              >
-                Back
-              </Button>
-              <Button type="submit" variant="contained" color="primary">
-                Save Changes
-              </Button>
-            </div>
-          </Form>
-        )}
-      </Formik>
+              <div className="col-span-2 flex justify-center space-x-4">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleBack}
+                >
+                  Back
+                </Button>
+                <Button type="submit" variant="contained" color="primary">
+                  Save Changes
+                </Button>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      )}
     </div>
   );
 };

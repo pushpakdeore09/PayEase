@@ -35,3 +35,12 @@ export const getAllowance = async (allowanceId) => {
         throw error;
     }
 }
+
+export const updateAllowance = async (allowanceData) => {
+    try {
+        const response = await apiClient.put("/allowance", allowanceData);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}

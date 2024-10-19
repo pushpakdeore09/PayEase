@@ -1,12 +1,14 @@
 package com.payrollBackend.dto;
 
 public class AllowanceDTO {
+    private Integer allowanceId;
     private String allowanceName;
     private Integer employeeId;
     private String allowanceType;
     private Double allowancePercentage;
 
-    public AllowanceDTO(String allowanceName, Double allowancePercentage, String allowanceType, Integer employeeId) {
+    public AllowanceDTO(Integer allowanceId, String allowanceName, Double allowancePercentage, String allowanceType, Integer employeeId) {
+        this.allowanceId = allowanceId;
         this.allowanceName = allowanceName;
         this.allowancePercentage = allowancePercentage;
         this.allowanceType = allowanceType;
@@ -14,6 +16,14 @@ public class AllowanceDTO {
     }
 
     public AllowanceDTO() {
+    }
+
+    public Integer getAllowanceId() {
+        return allowanceId;
+    }
+
+    public void setAllowanceId(Integer allowanceId) {
+        this.allowanceId = allowanceId;
     }
 
     public String getAllowanceName() {

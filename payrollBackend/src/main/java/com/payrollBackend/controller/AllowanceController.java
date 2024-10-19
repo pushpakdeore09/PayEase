@@ -28,8 +28,13 @@ public class AllowanceController {
         return allowanceService.removeAllowance(allowanceId);
     }
 
-    @GetMapping(value = "/allowance/allowanceId")
+    @GetMapping(value = "/allowance/{allowanceId}")
     public ResponseEntity<?> getAllowanceById(@PathVariable Integer allowanceId){
         return allowanceService.getAllowanceById(allowanceId);
+    }
+
+    @PutMapping(value = "/allowance")
+    public ResponseEntity<?> updateEmployee(@RequestBody AllowanceDTO allowanceDTO){
+        return allowanceService.editAllowanceDetails(allowanceDTO);
     }
 }
