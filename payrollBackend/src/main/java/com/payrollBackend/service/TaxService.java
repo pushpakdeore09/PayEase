@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,4 +45,20 @@ public class TaxService {
         return new ResponseEntity<>("Tax added Successfully", HttpStatus.CREATED);
     }
 
+    public ResponseEntity<?> getTaxByEmployeeId(Integer employeeId){
+        List<Tax> taxes = taxRepository.findByEmployee_EmployeeId(employeeId);
+        if(taxes.isEmpty()){
+            return new ResponseEntity<>("Tax not found", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(taxes, HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> removeTax(Integer taxId){
+        Optional<Tax> tax = taxRepository.findById(taxId);
+        if(tax.isEmpty()){
+            return new ResponseEntity<>("Tax not found", HttpStatus.BAD_REQUEST);
+        }
+        taxRepository.deleteById(taxId);
+        return new ResponseEntity<>("Tax removed Successfully", HttpStatus.OK);
+    }
 }

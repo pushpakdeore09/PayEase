@@ -48,8 +48,6 @@ const Deductions = () => {
   };
 
   const handleDelete = async (deductionId) => {
-    console.log(deductionId);
-
     try {
       const response = await deleteDeduction(deductionId);
       toast.success(response.data, { autoClose: 2000 });

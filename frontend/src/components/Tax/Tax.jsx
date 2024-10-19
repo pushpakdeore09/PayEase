@@ -1,11 +1,24 @@
-import { Box, Button, Divider, Grid2, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import {
+  Box,
+  Button,
+  Divider,
+  Grid2,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
+} from "@mui/material";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { deleteTax, getTaxByEmployeeId } from "../api/taxApi";
+import { toast } from "react-toastify";
 
 const Tax = () => {
-
   const navigate = useNavigate();
   const [searchInput, setSearchInput] = useState("");
   const [searchAttempted, setSearchAttempted] = useState(false);
@@ -13,20 +26,31 @@ const Tax = () => {
 
   const handleAddTax = () => {
     navigate("/addTax");
-  }
+  };
 
-  const handleSearchChange = () => {
-
-  }
-  const handleSearchTax = () => {
-
-  }
-  const handleUpdate = () => {
-
-  }
-  const handleDelete = () => {
-    
-  }
+  const handleSearchChange = (event) => {
+    setSearchInput(event.target.value);
+  };
+  const handleSearchTax = async () => {
+    try {
+      const response = await getTaxByEmployeeId(searchInput);
+      setTaxes(response.data);
+      console.log(response);
+    } catch (error) {
+      toast.error(error.response.data, {autoClose: 2000});
+    }
+  };
+  const handleUpdate = () => {};
+  const handleDelete = async (taxId) => {
+    try {
+      const response = await deleteTax(taxId);
+      console.log(response);
+      toast.success(response.data, { autoClose: 2000 });
+      setTaxes((prevTaxes) => prevTaxes.filter((tax) => tax.taxId !== taxId));
+    } catch (error) {
+      toast.error(error.response.data, { autoClose: 2000 });
+    }
+  };
   return (
     <>
       <div className="flex flex-col">
@@ -73,7 +97,7 @@ const Tax = () => {
 
         {searchAttempted && !taxes && (
           <Typography variant="h6" color="error" style={{ marginTop: "20px" }}>
-            No deductions found
+            No taxess found
           </Typography>
         )}
 
@@ -98,22 +122,22 @@ const Tax = () => {
                   </TableCell>
                   <TableCell>
                     <Typography variant="h6" fontWeight="bold">
-                      Deductions Name
+                      Tax Name
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography variant="h6" fontWeight="bold">
-                      Deductions Percent
+                      Tax Percent
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography variant="h6" fontWeight="bold">
-                      Deductions Type
+                      Tax Type
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography variant="h6" fontWeight="bold">
-                      Deductions Amount
+                      Tax Amount
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -129,44 +153,38 @@ const Tax = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {taxes.map((deduction, index) => (
+                {taxes.map((taxes, index) => (
                   <TableRow key={index}>
                     <TableCell>
                       <Typography variant="h6">
-                        {deduction.employee.employeeId}
+                        {taxes.employee.employeeId}
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="h6">
-                        {deduction.deductionName}
-                      </Typography>
+                      <Typography variant="h6">{taxes.taxName}</Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant="h6">
-                        {deduction.deductionPercentage}%
+                        {taxes.taxPercentage}%
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="h6">
-                        {deduction.deductionType}
-                      </Typography>
+                      <Typography variant="h6">{taxes.taxType}</Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="h6">
-                        {deduction.deductionAmount}
-                      </Typography>
+                      <Typography variant="h6">{taxes.taxAmount}</Typography>
                     </TableCell>
                     <TableCell>
                       <EditIcon
                         color="primary"
-                        onClick={() => handleUpdate(deduction.deductionId)}
+                        onClick={() => handleUpdate(taxes.taxId)}
                         style={{ cursor: "pointer" }}
                       />
                     </TableCell>
                     <TableCell>
                       <DeleteIcon
                         color="secondary"
-                        onClick={() => handleDelete(deduction.deductionId)}
+                        onClick={() => handleDelete(taxes.taxId)}
                         style={{ cursor: "pointer" }}
                       />
                     </TableCell>
@@ -178,7 +196,7 @@ const Tax = () => {
         )}
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Tax
+export default Tax;
