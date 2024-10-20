@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 const AddDeductions = () => {
   const navigate = useNavigate(); 
-  const allowanceTypes = ["Statutory Deduction", "Voluntary Deduction"];
+  const deductionTypes = ["Statutory Deduction", "Voluntary Deduction"];
   const initialValues = {
     deductionName: "",
     employeeId: "",
@@ -93,9 +93,9 @@ const AddDeductions = () => {
                 helperText={touched.deductionType && errors.deductionType}
               >
                 <MenuItem value="">Select Deduction Type</MenuItem>
-                {allowanceTypes.map((allowanceType, index) => (
-                  <MenuItem key={index} value={allowanceType}>
-                    {allowanceType}
+                {deductionTypes.map((deductionType, index) => (
+                  <MenuItem key={index} value={deductionType}>
+                    {deductionType}
                   </MenuItem>
                 ))}
               </Field>

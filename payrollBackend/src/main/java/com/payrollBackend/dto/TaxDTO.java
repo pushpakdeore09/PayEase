@@ -2,6 +2,7 @@ package com.payrollBackend.dto;
 
 public class TaxDTO {
 
+    private Integer taxId;
     private String taxName;
     private Integer employeeId;
     private String taxType;
@@ -10,8 +11,9 @@ public class TaxDTO {
     public TaxDTO() {
     }
 
-    public TaxDTO(Integer employeeId, String taxName, Double taxPercentage, String taxType) {
+    public TaxDTO(Integer employeeId, Integer taxId, String taxName, Double taxPercentage, String taxType) {
         this.employeeId = employeeId;
+        this.taxId = taxId;
         this.taxName = taxName;
         this.taxPercentage = taxPercentage;
         this.taxType = taxType;
@@ -23,6 +25,14 @@ public class TaxDTO {
 
     public void setEmployeeId(Integer employeeId) {
         this.employeeId = employeeId;
+    }
+
+    public Integer getTaxId() {
+        return taxId;
+    }
+
+    public void setTaxId(Integer taxId) {
+        this.taxId = taxId;
     }
 
     public String getTaxName() {

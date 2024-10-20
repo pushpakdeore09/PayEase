@@ -18,7 +18,7 @@ public class DeductionController {
         return deductionService.addDeduction(deductionDTO);
     }
 
-    @GetMapping(value = "/deductions/{employeeId}")
+    @GetMapping(value = "/deductions/employee/{employeeId}")
     public ResponseEntity<?> getDeduction(@PathVariable Integer employeeId){
         return deductionService.getDeductionByEmployeeId(employeeId);
     }
@@ -26,5 +26,15 @@ public class DeductionController {
     @DeleteMapping(value = "/deduction/{deductionId}")
     public ResponseEntity<?> deleteDeduction(@PathVariable Integer deductionId){
         return deductionService.removeDeduction(deductionId);
+    }
+
+    @GetMapping(value = "/deduction/{deductionId}")
+    public ResponseEntity<?> getDeductionById(@PathVariable Integer deductionId){
+        return deductionService.getDeductionById(deductionId);
+    }
+
+    @PutMapping(value = "/deduction")
+    public ResponseEntity<?> updateDeduction(@RequestBody DeductionDTO deductionDTO){
+        return deductionService.editDeductionDetails(deductionDTO);
     }
 }

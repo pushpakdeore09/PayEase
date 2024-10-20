@@ -40,7 +40,9 @@ const Tax = () => {
       toast.error(error.response.data, {autoClose: 2000});
     }
   };
-  const handleUpdate = () => {};
+  const handleUpdate = (taxId, employeeId) => {
+    navigate(`/tax/${taxId}/${employeeId}`);
+  };
   const handleDelete = async (taxId) => {
     try {
       const response = await deleteTax(taxId);
@@ -177,7 +179,7 @@ const Tax = () => {
                     <TableCell>
                       <EditIcon
                         color="primary"
-                        onClick={() => handleUpdate(taxes.taxId)}
+                        onClick={() => handleUpdate(taxes.taxId, taxes.employee.employeeId)}
                         style={{ cursor: "pointer" }}
                       />
                     </TableCell>

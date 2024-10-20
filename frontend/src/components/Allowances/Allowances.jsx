@@ -46,7 +46,7 @@ const Allowances = () => {
   };
 
   const handleUpdate = (allowanceId, employeeId) => {
-    navigate(`/allowance/${employeeId}/${allowanceId}`);
+    navigate(`/allowance/${allowanceId}/${employeeId}`);
   };
 
   const handleDelete = async (allowanceId) => {

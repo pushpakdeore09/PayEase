@@ -46,6 +46,10 @@ public class TaxService {
     }
 
     public ResponseEntity<?> getTaxByEmployeeId(Integer employeeId){
+        Employee employee = employeeService.findByEmployeeId(employeeId);
+        if(employee == null){
+            return new ResponseEntity<>("Employee not found", HttpStatus.BAD_REQUEST);
+        }
         List<Tax> taxes = taxRepository.findByEmployee_EmployeeId(employeeId);
         if(taxes.isEmpty()){
             return new ResponseEntity<>("Tax not found", HttpStatus.BAD_REQUEST);
@@ -60,5 +64,35 @@ public class TaxService {
         }
         taxRepository.deleteById(taxId);
         return new ResponseEntity<>("Tax removed Successfully", HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> getTaxById(Integer taxId){
+        Optional<Tax> tax = taxRepository.findById(taxId);
+        if(tax.isEmpty()){
+            return new ResponseEntity<>("Tax not found", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(tax, HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> editTaxDetails(TaxDTO taxDTO){
+        Integer taxId = taxDTO.getTaxId();
+        Optional<Tax> taxOptional = taxRepository.findById(taxId);
+        if(taxOptional.isEmpty()){
+            return new ResponseEntity<>("Tax not found", HttpStatus.BAD_REQUEST);
+        }
+        Employee employee = employeeService.findByEmployeeId(taxDTO.getEmployeeId());
+        if(employee == null){
+            return new ResponseEntity<>("Employee not found", HttpStatus.BAD_REQUEST);
+        }
+        Tax existingTax = taxOptional.get();
+        BigDecimal taxAmountBD = BigDecimal.valueOf(taxDTO.getTaxPercentage()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(employee.getBaseSalary())).setScale(2, RoundingMode.HALF_UP);
+        Double taxAmount = taxAmountBD.doubleValue();
+        existingTax.setTaxName(taxDTO.getTaxName());
+        existingTax.setTaxType(taxDTO.getTaxType());
+        existingTax.setEmployee(employee);
+        existingTax.setTaxPercentage(taxDTO.getTaxPercentage());
+        existingTax.setTaxAmount(taxAmount);
+        taxRepository.save(existingTax);
+        return new ResponseEntity<>("Tax updated Successfully", HttpStatus.OK);
     }
 }

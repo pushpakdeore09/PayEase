@@ -9,78 +9,69 @@ import * as Yup from "yup";
 import { Field, Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getAllowance, updateAllowance } from "../api/allowanceApi";
+import { getTaxById, updateTax } from "../api/taxApi";
 import { toast } from "react-toastify";
 
-const UpdateAllowance = () => {
+const UpdateTax = () => {
+    const { taxId } = useParams();
   const navigate = useNavigate();
-  const allowanceTypes = ["Recurring Allowance", "One-Time Allowance"];
-
-  const { allowanceId } = useParams();
-  const [allowance, setAllowance] = useState(null);
-
+  const taxTypes = ["Direct Tax"];
+  const [tax, setTax] = useState(null);
   const validationSchema = Yup.object().shape({
-    allowanceName: Yup.string()
-      .required("Allowance name is required")
-      .min(3, "Allowance name must be at least 3 characters"),
+    taxName: Yup.string()
+      .required("Tax name is required")
+      .min(3, "Tax name must be at least 3 characters"),
     employeeId: Yup.string()
       .required("Employee ID is required")
       .matches(/^[0-9]+$/, "Employee ID must be a number"),
-    allowanceType: Yup.string().required("Allowance Type is required"),
-    allowancePercentage: Yup.number()
-      .required("Allowance Percentage is required")
-      .min(0, "Allowance percentage cannot be negative")
-      .max(100, "Allowance percentage cannot exceed 100"),
+    taxType: Yup.string().required("Tax Type is required"),
+    taxPercentage: Yup.number()
+      .required("Tax Percentage is required")
+      .min(0, "Tax percentage cannot be negative")
+      .max(100, "Tax percentage cannot exceed 100"),
   });
 
   useEffect(() => {
-    const fetchAllowance = async () => {
-      try {
-        const response = await getAllowance(allowanceId);
-        setAllowance(response.data);
-      } catch (error) {
-        console.error(error);
-        toast.error(error.response.data, { autoClose: 2000 });
-      }
+    const fetchTax = async () => {
+        try {
+            const response = await getTaxById(taxId);
+            setTax(response.data);
+        } catch (error) {
+            toast.error(error.response.data, {autoClose: 2000});
+        }
     };
-    fetchAllowance();
-  }, [allowanceId]);
-
+    fetchTax();
+  },[taxId])
   const handleUpdate = async (values) => {
     const updatedValues = {
-      ...values,
-      allowanceId: allowanceId,
+        ...values,
+        taxId: taxId,
     };
     try {
-      const response = await updateAllowance(updatedValues);
-      toast.success(response.data, { autoClose: 2000 });
+        const response = await updateTax(updatedValues);
+        toast.success(response.data, {autoClose: 2000});
     } catch (error) {
-      console.log(error);
-
-      toast.error(error.response?.data || "Failed to update allowance", {
-        autoClose: 2000,
-      });
+        toast.error(error.response.data, {autoClose: 2000});
     }
-  };
+  }
 
   const handleBack = () => {
     navigate(-1);
-  };
-
+  }
   return (
     <div className="flex flex-col p-4 space-y-6">
       <Typography variant="h4" className="text-3xl font-bold mb-4">
-        Update Allowance Details
+        Update Tax Details
       </Typography>
       <Divider sx={{ height: 4, bgcolor: "gray" }} />
 
-      {allowance && (
+      {tax && (
         <Formik
           initialValues={{
-            allowanceName: allowance.allowanceName || "",
-            employeeId: allowance.employee?.employeeId || "",
-            allowanceType: allowance.allowanceType || "",
-            allowancePercentage: allowance.allowancePercentage || "",
+            taxName: tax.taxName || "",
+            employeeId: tax.employee?.employeeId || "",
+            taxType: tax.taxType || "",
+            taxPercentage: tax.taxPercentage || "",
           }}
           validationSchema={validationSchema}
           onSubmit={handleUpdate}
@@ -91,11 +82,11 @@ const UpdateAllowance = () => {
                 <Field
                   as={TextField}
                   fullWidth
-                  label="Allowance Name"
-                  name="allowanceName"
+                  label="Tax Name"
+                  name="taxName"
                   variant="outlined"
-                  error={touched.allowanceName && !!errors.allowanceName}
-                  helperText={touched.allowanceName && errors.allowanceName}
+                  error={touched.taxName && !!errors.taxName}
+                  helperText={touched.taxName && errors.taxName}
                 />
               </div>
               <div>
@@ -115,16 +106,16 @@ const UpdateAllowance = () => {
                   as={TextField}
                   fullWidth
                   select
-                  label="Allowance Type"
-                  name="allowanceType"
+                  label="Tax Type"
+                  name="taxType"
                   variant="outlined"
-                  error={touched.allowanceType && !!errors.allowanceType}
-                  helperText={touched.allowanceType && errors.allowanceType}
+                  error={touched.taxType && !!errors.taxType}
+                  helperText={touched.taxType && errors.taxType}
                 >
-                  <MenuItem value="">Select Allowance Type</MenuItem>
-                  {allowanceTypes.map((allowanceType, index) => (
-                    <MenuItem key={index} value={allowanceType}>
-                      {allowanceType}
+                  <MenuItem value="">Select tax Type</MenuItem>
+                  {taxTypes.map((taxType, index) => (
+                    <MenuItem key={index} value={taxType}>
+                      {taxType}
                     </MenuItem>
                   ))}
                 </Field>
@@ -133,16 +124,12 @@ const UpdateAllowance = () => {
                 <Field
                   as={TextField}
                   fullWidth
-                  label="Allowance Percentage"
-                  name="allowancePercentage"
+                  label="Tax Percentage"
+                  name="taxPercentage"
                   type="number"
                   variant="outlined"
-                  error={
-                    touched.allowancePercentage && !!errors.allowancePercentage
-                  }
-                  helperText={
-                    touched.allowancePercentage && errors.allowancePercentage
-                  }
+                  error={touched.taxPercentage && !!errors.taxPercentage}
+                  helperText={touched.taxPercentage && errors.taxPercentage}
                 />
               </div>
 
@@ -166,4 +153,4 @@ const UpdateAllowance = () => {
   );
 };
 
-export default UpdateAllowance;
+export default UpdateTax;

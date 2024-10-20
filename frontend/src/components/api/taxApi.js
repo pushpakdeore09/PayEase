@@ -11,7 +11,7 @@ export const addTax =  async (taxData) => {
 
 export const getTaxByEmployeeId = async (employeeId) => {
     try {
-        const response = await apiClient.get(`/tax/${employeeId}`)
+        const response = await apiClient.get(`/tax/employee/${employeeId}`)
         return response;
     } catch (error) {
         throw error;
@@ -21,6 +21,24 @@ export const getTaxByEmployeeId = async (employeeId) => {
 export const deleteTax = async (taxId) => {
     try {
         const response = await apiClient.delete(`/tax/${taxId}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const getTaxById = async (taxId) => {
+    try {
+        const response = await apiClient.get(`/tax/${taxId}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const updateTax = async (taxData) => {
+    try {
+        const response = await apiClient.put("/tax", taxData);
         return response;
     } catch (error) {
         throw error;

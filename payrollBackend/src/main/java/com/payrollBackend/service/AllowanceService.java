@@ -80,12 +80,17 @@ public class AllowanceService {
             return new ResponseEntity<>("Allowance not found", HttpStatus.BAD_REQUEST);
         }
         Employee employee = employeeService.findByEmployeeId(allowanceDTO.getEmployeeId());
+        if(employee == null){
+            return new ResponseEntity<>("Employee not found", HttpStatus.BAD_REQUEST);
+        }
         Allowances existingAllowance = allowanceOptional.get();
-
+        BigDecimal allowanceAmount = BigDecimal.valueOf(allowanceDTO.getAllowancePercentage()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(employee.getBaseSalary())).setScale(2, RoundingMode.HALF_UP);
+        Double doubleAllowanceAmount = allowanceAmount.doubleValue();
         existingAllowance.setAllowanceName(allowanceDTO.getAllowanceName());
         existingAllowance.setEmployee(employee);
         existingAllowance.setAllowanceType(allowanceDTO.getAllowanceType());
         existingAllowance.setAllowancePercentage(allowanceDTO.getAllowancePercentage());
+        existingAllowance.setAllowanceAmount(doubleAllowanceAmount);
         allowanceRepository.save(existingAllowance);
         return new ResponseEntity<>("Allowance updated Successfully", HttpStatus.OK);
     }

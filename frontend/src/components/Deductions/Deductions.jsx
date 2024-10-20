@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { deleteDeduction, getDeduction } from "../api/deductionApi";
+import { deleteDeduction, getDeductionByEmplyeeId } from "../api/deductionApi";
 
 const Deductions = () => {
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ const Deductions = () => {
   const handleSearchDeduction = async () => {
     setSearchAttempted(true);
     try {
-      const response = await getDeduction(searchInput);
+      const response = await getDeductionByEmplyeeId(searchInput);
       const deductionData = response.data;
       setDeductions(deductionData);
     } catch (error) {
@@ -43,8 +43,8 @@ const Deductions = () => {
     navigate("/addDeductions");
   };
 
-  const handleUpdate = (deductionId) => {
-    console.log(`Update deduction with ID: ${deductionId}`);
+  const handleUpdate = (deductionId, employeeId) => {
+    navigate(`/deduction/${deductionId}/${employeeId}`);
   };
 
   const handleDelete = async (deductionId) => {
@@ -193,7 +193,7 @@ const Deductions = () => {
                     <TableCell>
                       <EditIcon
                         color="primary"
-                        onClick={() => handleUpdate(deduction.deductionId)}
+                        onClick={() => handleUpdate(deduction.deductionId, deduction.employee.employeeId)}
                         style={{ cursor: "pointer" }}
                       />
                     </TableCell>

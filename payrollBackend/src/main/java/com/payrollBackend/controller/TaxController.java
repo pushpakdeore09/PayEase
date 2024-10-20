@@ -18,7 +18,7 @@ public class TaxController {
         return taxService.addTax(taxDTO);
     }
 
-    @GetMapping(value = "/tax/{employeeId}")
+    @GetMapping(value = "/tax/employee/{employeeId}")
     public ResponseEntity<?> getTaxByEmployeeId(@PathVariable Integer employeeId){
         return taxService.getTaxByEmployeeId(employeeId);
     }
@@ -27,5 +27,15 @@ public class TaxController {
     public ResponseEntity<?> deleteTax(@PathVariable Integer taxId){
         return taxService.removeTax(taxId);
     }
-	
+
+    @GetMapping(value = "/tax/{taxId}")
+    public ResponseEntity<?> getTaxById(@PathVariable Integer taxId){
+        return taxService.getTaxById(taxId);
+    }
+
+    @PutMapping(value = "/tax")
+    public ResponseEntity<?> updateTax(@RequestBody TaxDTO taxDTO){
+        return taxService.editTaxDetails(taxDTO);
+    }
+
 }
