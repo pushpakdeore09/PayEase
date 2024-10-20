@@ -26,7 +26,7 @@ const SignInForm = () => {
       console.log(response);
       const message = response.body;
       console.log(message);
-      
+
       if (
         message === "User does not exist!" ||
         message === "Invalid email or password"
@@ -39,7 +39,11 @@ const SignInForm = () => {
         }, 2000);
       }
     } catch (error) {
-      toast.error(error.response.body, { autoClose: 1500 });
+      if (error.code === "ERR_NETWORK") {
+        toast.error("Service Unavailable", { autoClose: 2000 });
+      } else {
+        toast.error(error.response.body, { autoClose: 1500 });
+      }
     }
   };
 

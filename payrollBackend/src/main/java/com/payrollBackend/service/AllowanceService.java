@@ -48,6 +48,10 @@ public class AllowanceService {
     }
 
     public ResponseEntity<?> getAllowancesByEmployeeId(Integer employeeId){
+        Employee employee = employeeService.findByEmployeeId(employeeId);
+        if(employee == null){
+            return new ResponseEntity<>("Employee not found", HttpStatus.BAD_REQUEST);
+        }
         List<Allowances> allowances = allowanceRepository.findByEmployee_EmployeeId(employeeId);
         if(allowances.isEmpty()){
             return new ResponseEntity<>("Allowances not found", HttpStatus.BAD_REQUEST);

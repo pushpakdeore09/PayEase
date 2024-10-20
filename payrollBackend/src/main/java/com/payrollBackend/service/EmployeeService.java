@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +33,9 @@ public class EmployeeService {
 
     @Autowired
     private AllowanceRepository allowanceRepository;
+
+    @Autowired
+    private TaxRepository taxRepository;
 
     @Transactional
     public ResponseEntity<Map<String, Object>> addEmployee(Employee employee) {
@@ -111,29 +116,64 @@ public class EmployeeService {
     public ResponseEntity<?> editEmployeeDetails(Employee employee) throws Exception {
         Integer employeeId = employee.getEmployeeId();
         Optional<Employee> optionalOldEmployee = Optional.ofNullable(findByEmployeeId(employeeId));
-
         if (optionalOldEmployee.isEmpty()) {
             return new ResponseEntity<>("Employee not found", HttpStatus.BAD_REQUEST);
         }
-
         Employee existingEmployee = optionalOldEmployee.get();
+        Double newBaseSalary = employee.getBaseSalary();
+        Double existingBaseSalary = existingEmployee.getBaseSalary();
+        if(!newBaseSalary.equals(existingBaseSalary)){
+            updateAllowanceAndDeductionAndTax(employee, newBaseSalary);
+        }
+        existingEmployee.setFirstName(employee.getFirstName());
+        existingEmployee.setLastName(employee.getLastName());
+        existingEmployee.setGender(employee.getGender());
+        existingEmployee.setDob(employee.getDob());
+        existingEmployee.setAddress(employee.getAddress());
+        existingEmployee.setEmail(employee.getEmail());
+        existingEmployee.setDesignation(employee.getDesignation());
+        existingEmployee.setJoiningDate(employee.getJoiningDate());
+        existingEmployee.setEmployeeType(employee.getEmployeeType());
+        existingEmployee.setBaseSalary(newBaseSalary);
+        if (employee.getDepartment() != null) {
+            existingEmployee.setDepartment(employee.getDepartment());
+        }
+        employeeRepository.save(existingEmployee);
+        return new ResponseEntity<>("Employee updated Successfully", HttpStatus.OK);
+    }
 
-        Field[] fields = Employee.class.getDeclaredFields();
-        for (Field field : fields) {
-            field.setAccessible(true);
-            try {
-                Object value = field.get(employee);
-                if (value != null) {
-                    field.set(existingEmployee, value);
-                }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
+    private void updateAllowanceAndDeductionAndTax(Employee employee, Double newBaseSalary) {
+        System.out.println("Calculating");
+        List<Allowances> allowances = allowanceRepository.findByEmployee_EmployeeId(employee.getEmployeeId());
+        List<Deductions> deductions = deductionRepository.findByEmployee_EmployeeId(employee.getEmployeeId());
+        List<Tax> taxes = taxRepository.findByEmployee_EmployeeId(employee.getEmployeeId());
+
+        for (Allowances allowance : allowances) {
+            BigDecimal allowanceAmount = BigDecimal.valueOf(allowance.getAllowancePercentage())
+                    .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP)
+                    .multiply(BigDecimal.valueOf(newBaseSalary))
+                    .setScale(2, RoundingMode.HALF_UP);
+            allowance.setAllowanceAmount(allowanceAmount.doubleValue());
+            allowanceRepository.save(allowance);
         }
 
-        employeeRepository.save(existingEmployee);
+        for (Deductions deduction : deductions) {
+            BigDecimal deductionAmount = BigDecimal.valueOf(deduction.getDeductionPercentage())
+                    .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP)
+                    .multiply(BigDecimal.valueOf(newBaseSalary))
+                    .setScale(2, RoundingMode.HALF_UP);
+            deduction.setDeductionAmount(deductionAmount.doubleValue());
+            deductionRepository.save(deduction);
+        }
 
-        return new ResponseEntity<>("Employee updated Successfully", HttpStatus.OK);
+        for (Tax tax : taxes) {
+            BigDecimal taxAmount = BigDecimal.valueOf(tax.getTaxPercentage())
+                    .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP)
+                    .multiply(BigDecimal.valueOf(newBaseSalary))
+                    .setScale(2, RoundingMode.HALF_UP);
+            tax.setTaxAmount(taxAmount.doubleValue());
+            taxRepository.save(tax);
+        }
     }
 
 }

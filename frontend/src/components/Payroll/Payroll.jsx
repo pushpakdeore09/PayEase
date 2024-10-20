@@ -40,7 +40,11 @@ const Payroll = () => {
       setPayrolls(response.data)
       
     } catch (error) {
-      toast.error(error.response.data, {autoClose: 2000});
+      if (error.code === "ERR_NETWORK") {
+        toast.error("Service Unavailable", { autoClose: 2000 });
+      } else {
+        toast.error(error.response.body, { autoClose: 1500 });
+      }
     }
   }
 
@@ -57,8 +61,11 @@ const Payroll = () => {
         setPayrolls([]);
       }
     } catch (error) {
-      console.error("Error fetching payroll:", error);
-      toast.error("Error fetching payroll", { autoClose: 2000 });
+      if (error.code === "ERR_NETWORK") {
+        toast.error("Service Unavailable", { autoClose: 2000 });
+      } else {
+        toast.error(error.response.body, { autoClose: 1500 });
+      }
       setPayrolls([]);
     }
   };

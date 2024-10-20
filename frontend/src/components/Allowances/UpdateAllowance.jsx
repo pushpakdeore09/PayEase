@@ -55,11 +55,11 @@ const UpdateAllowance = () => {
       const response = await updateAllowance(updatedValues);
       toast.success(response.data, { autoClose: 2000 });
     } catch (error) {
-      console.log(error);
-
-      toast.error(error.response?.data || "Failed to update allowance", {
-        autoClose: 2000,
-      });
+      if (error.code === "ERR_NETWORK") {
+        toast.error("Service Unavailable", { autoClose: 2000 });
+      } else {
+        toast.error(error.response.body, { autoClose: 2000 });
+      }
     }
   };
 

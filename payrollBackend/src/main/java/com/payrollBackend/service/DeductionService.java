@@ -47,6 +47,10 @@ public class DeductionService {
     }
 
     public ResponseEntity<?> getDeductionByEmployeeId(Integer employeeId){
+        Employee employee = employeeService.findByEmployeeId(employeeId);
+        if(employee == null){
+            return new ResponseEntity<>("Employee not found", HttpStatus.BAD_REQUEST);
+        }
         List<Deductions> deductions = deductionRepository.findByEmployee_EmployeeId(employeeId);
         if(deductions.isEmpty()){
             return new ResponseEntity<>("Deductions not found", HttpStatus.BAD_REQUEST);
@@ -55,11 +59,12 @@ public class DeductionService {
     }
 
     public ResponseEntity<?> removeDeduction(Integer deductionId){
-        Optional<Deductions> deduction = deductionRepository.findById(deductionId);
-        if(deduction.isEmpty()){
+        Optional<Deductions> deductionOptional = deductionRepository.findById(deductionId);
+        if(deductionOptional.isEmpty()){
             return new ResponseEntity<>("Deduction not found", HttpStatus.BAD_REQUEST);
         }
-        deductionRepository.deleteById(deductionId);
+        Deductions deduction = deductionOptional.get();
+        deductionRepository.delete(deduction);
         return new ResponseEntity<>("Deduction removed Successfully", HttpStatus.OK);
     }
 

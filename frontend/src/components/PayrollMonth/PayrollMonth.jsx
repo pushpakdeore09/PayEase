@@ -44,10 +44,8 @@ const PayrollMonth = () => {
     year: "",
   });
 
-  // State to hold search results
   const [searchResults, setSearchResults] = useState([]);
 
-  // Yup validation schema
   const validationSchema = Yup.object({
     searchYear: Yup.number()
       .required("Required")
@@ -66,7 +64,11 @@ const PayrollMonth = () => {
       const response = await getPayrollMonth(searchValues);
       setSearchResults(response.data);
     } catch (error) {
-      toast.error("Payroll Month not found", { autoClose: 2000 });
+      if (error.code === "ERR_NETWORK") {
+        toast.error("Service Unavailable", { autoClose: 2000 });
+      } else {
+        toast.error(error.response.body, { autoClose: 1500 });
+      }
     }
   };
 

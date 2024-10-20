@@ -50,8 +50,11 @@ const Department = () => {
         setDepartments([]); 
       }
     } catch (error) {
-      console.error("Error fetching department:", error); 
-      toast.error("Error fetching department", { autoClose: 2000 });
+      if (error.code === "ERR_NETWORK") {
+        toast.error("Service Unavailable", { autoClose: 2000 });
+      } else {
+        toast.error(error.response.body, { autoClose: 1500 });
+      }
       setDepartments([]);
     }
   };

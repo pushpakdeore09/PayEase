@@ -37,7 +37,11 @@ const UpdateTax = () => {
             const response = await getTaxById(taxId);
             setTax(response.data);
         } catch (error) {
-            toast.error(error.response.data, {autoClose: 2000});
+          if (error.code === "ERR_NETWORK") {
+            toast.error("Service Unavailable", { autoClose: 2000 });
+          } else {
+            toast.error(error.response.body, { autoClose: 1500 });
+          }
         }
     };
     fetchTax();
@@ -51,7 +55,11 @@ const UpdateTax = () => {
         const response = await updateTax(updatedValues);
         toast.success(response.data, {autoClose: 2000});
     } catch (error) {
-        toast.error(error.response.data, {autoClose: 2000});
+      if (error.code === "ERR_NETWORK") {
+        toast.error("Service Unavailable", { autoClose: 2000 });
+      } else {
+        toast.error(error.response.body, { autoClose: 1500 });
+      }
     }
   }
 

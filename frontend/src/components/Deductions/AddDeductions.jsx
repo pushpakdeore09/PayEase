@@ -1,13 +1,19 @@
-import { Button, Divider, MenuItem, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  Divider,
+  MenuItem,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Field, Form, Formik } from "formik";
 import React from "react";
 import * as Yup from "yup";
 import { addDeductions } from "../api/deductionApi";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 
 const AddDeductions = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const deductionTypes = ["Statutory Deduction", "Voluntary Deduction"];
   const initialValues = {
     deductionName: "",
@@ -33,15 +39,14 @@ const AddDeductions = () => {
   const handleSave = async (values) => {
     try {
       const response = await addDeductions(values);
-      toast.success(response.data, { autoClose: 2000 });
+      toast.success(response, { autoClose: 2000 });
     } catch (error) {
-      const errorMessage = error.response?.data;
-      toast.error(errorMessage, { autoClose: 2000 });
+      toast.error(error, { autoClose: 1500 });
     }
   };
 
   const handleBack = () => {
-    navigate("/deductions"); 
+    navigate("/deductions");
   };
 
   return (

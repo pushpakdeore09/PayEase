@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   Divider,
@@ -8,43 +8,15 @@ import {
   RadioGroup,
   FormControlLabel,
   MenuItem,
-} from '@mui/material';
-import { Formik, Form, Field } from 'formik';
+} from "@mui/material";
+import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { useParams } from 'react-router-dom';
-import { searchEmployee, updateEmployee } from '../api/employeeApi';
-import { fetchAllDept } from '../api/deptApi';
-import { toast } from 'react-toastify';
+import { useParams } from "react-router-dom";
+import { searchEmployee, updateEmployee } from "../api/employeeApi";
+import { fetchAllDept } from "../api/deptApi";
+import { toast } from "react-toastify";
 
 const EditEmployee = () => {
-  const initialValues = {
-    firstName: employee.firstName || "",
-    lastName: employee.lastName || "",
-    gender: employee.gender || "",
-    dob: employee.dob || "",
-    address: employee.address || "",
-    email: employee.email || "",
-    designation: employee.designation || "",
-    joiningDate: employee.joiningDate || "",
-    employeeType: employee.employeeType || "",
-    baseSalary: employee.baseSalary || "",
-    department: employee.department || "",
-  };
-  const validationSchema = Yup.object({
-    firstName: Yup.string().required("Required"),
-    lastName: Yup.string().required("Required"),
-    gender: Yup.string().required("Required"),
-    dob: Yup.date().required("Required").nullable(),
-    address: Yup.string().required("Required"),
-    email: Yup.string().required("Required"),
-    designation: Yup.string().required("Required"),
-    joiningDate: Yup.date().required("Required").nullable(),
-    employeeType: Yup.string().required("Required"),
-    baseSalary: Yup.number()
-      .typeError("Base salary must be a number")
-      .required("Required"),
-    department: Yup.string().required("Required"),
-  });
   const { employeeId } = useParams();
   const [employee, setEmployee] = useState(null);
   const [departments, setDepartments] = useState([]);
@@ -55,18 +27,17 @@ const EditEmployee = () => {
       try {
         const response = await searchEmployee(employeeId);
         setEmployee(response);
-        setSelectedDepartment(response.department); 
+        setSelectedDepartment(response.department);
       } catch (error) {
-        toast.error("Could not fetch employee details.", { autoClose: 2000 });
+        toast.error(error.response.data, { autoClose: 2000 });
       }
     };
-
     const fetchDepartments = async () => {
       try {
         const response = await fetchAllDept();
         setDepartments(response.data);
       } catch (error) {
-        toast.error("Could not fetch departments.", { autoClose: 2000 });
+        toast.error(error.response.data, { autoClose: 2000 });
       }
     };
 
@@ -74,23 +45,53 @@ const EditEmployee = () => {
     fetchDepartments();
   }, [employeeId]);
 
+  const initialValues = {
+    firstName: employee?.firstName || "",
+    lastName: employee?.lastName || "",
+    gender: employee?.gender || "",
+    dob: employee?.dob || "",
+    address: employee?.address || "",
+    email: employee?.email || "",
+    designation: employee?.designation || "",
+    joiningDate: employee?.joiningDate || "",
+    employeeType: employee?.employeeType || "",
+    baseSalary: employee?.baseSalary || "",
+    department: employee?.department || "",
+  };
+
+  const validationSchema = Yup.object({
+    firstName: Yup.string().required("Required"),
+    lastName: Yup.string().required("Required"),
+    gender: Yup.string().required("Required"),
+    dob: Yup.date().required("Required").nullable(),
+    address: Yup.string().required("Required"),
+    email: Yup.string().email("Invalid email").required("Required"),
+    designation: Yup.string().required("Required"),
+    joiningDate: Yup.date().required("Required").nullable(),
+    employeeType: Yup.string().required("Required"),
+    baseSalary: Yup.number()
+      .typeError("Base salary must be a number")
+      .required("Required")
+      .moreThan(0, "Base salary must be greater than 0"), 
+    department: Yup.string().required("Required"),
+  });
+
   const handleUpdate = async (values) => {
     const updatedData = {
       ...values,
       department: selectedDepartment,
-      employeeId
+      employeeId,
     };
-
     try {
-        const response = await updateEmployee(updatedData);
-        toast.success(response, {autoClose: 2000})
+      const response = await updateEmployee(updatedData);
+      toast.success(response, { autoClose: 2000 });
     } catch (error) {
-        toast.error(error.response.data, {autoClose: 2000});
+      toast.error(error.response.data, { autoClose: 2000 });
     }
   };
 
   if (!employee) {
-    return <Typography>Loading...</Typography>; 
+    return <Typography>Loading...</Typography>;
   }
 
   return (
@@ -105,7 +106,7 @@ const EditEmployee = () => {
         validationSchema={validationSchema}
         onSubmit={handleUpdate}
       >
-        {({ setFieldValue }) => (
+        {({ errors, touched, setFieldValue }) => (
           <Form className="grid grid-cols-2 gap-6">
             <div className="col-span-2">
               <Field
@@ -119,10 +120,12 @@ const EditEmployee = () => {
                   setSelectedDepartment(departmentName);
                   setFieldValue("department", departmentName);
                 }}
+                error={Boolean(touched.department && errors.department)}
+                helperText={touched.department && errors.department}
               >
                 <MenuItem value="">Select Department</MenuItem>
-                {departments.map((department) => (
-                  <MenuItem key={department.deptId} value={department.deptId}>
+                {departments.map((department, index) => (
+                  <MenuItem key={index} value={department.deptId}>
                     {department.deptName}
                   </MenuItem>
                 ))}
@@ -136,6 +139,8 @@ const EditEmployee = () => {
                 fullWidth
                 label="First Name"
                 variant="outlined"
+                error={Boolean(touched.firstName && errors.firstName)}
+                helperText={touched.firstName && errors.firstName}
               />
             </div>
             <div>
@@ -145,21 +150,34 @@ const EditEmployee = () => {
                 fullWidth
                 label="Last Name"
                 variant="outlined"
+                error={Boolean(touched.lastName && errors.lastName)}
+                helperText={touched.lastName && errors.lastName}
               />
             </div>
             <div>
               <Typography variant="body1" gutterBottom>
                 Gender
               </Typography>
-              <Field
-                as={RadioGroup}
-                row
-                name="gender"
-              >
-                <FormControlLabel value="male" control={<Radio />} label="Male" />
-                <FormControlLabel value="female" control={<Radio />} label="Female" />
-                <FormControlLabel value="other" control={<Radio />} label="Other" />
+              <Field as={RadioGroup} row name="gender">
+                <FormControlLabel
+                  value="male"
+                  control={<Radio />}
+                  label="Male"
+                />
+                <FormControlLabel
+                  value="female"
+                  control={<Radio />}
+                  label="Female"
+                />
+                <FormControlLabel
+                  value="other"
+                  control={<Radio />}
+                  label="Other"
+                />
               </Field>
+              {touched.gender && errors.gender && (
+                <Typography color="error">{errors.gender}</Typography>
+              )}
             </div>
             <div>
               <Field
@@ -170,6 +188,8 @@ const EditEmployee = () => {
                 label="Date of Birth"
                 InputLabelProps={{ shrink: true }}
                 variant="outlined"
+                error={Boolean(touched.dob && errors.dob)}
+                helperText={touched.dob && errors.dob}
               />
             </div>
             <div>
@@ -179,6 +199,8 @@ const EditEmployee = () => {
                 fullWidth
                 label="Address"
                 variant="outlined"
+                error={Boolean(touched.address && errors.address)}
+                helperText={touched.address && errors.address}
               />
             </div>
             <div>
@@ -188,6 +210,8 @@ const EditEmployee = () => {
                 fullWidth
                 label="Email"
                 variant="outlined"
+                error={Boolean(touched.email && errors.email)}
+                helperText={touched.email && errors.email}
               />
             </div>
             <div>
@@ -197,6 +221,8 @@ const EditEmployee = () => {
                 fullWidth
                 label="Designation"
                 variant="outlined"
+                error={Boolean(touched.designation && errors.designation)}
+                helperText={touched.designation && errors.designation}
               />
             </div>
             <div>
@@ -208,6 +234,8 @@ const EditEmployee = () => {
                 label="Joining Date"
                 InputLabelProps={{ shrink: true }}
                 variant="outlined"
+                error={Boolean(touched.joiningDate && errors.joiningDate)}
+                helperText={touched.joiningDate && errors.joiningDate}
               />
             </div>
             <div>
@@ -217,6 +245,8 @@ const EditEmployee = () => {
                 fullWidth
                 label="Employee Type"
                 select
+                error={Boolean(touched.employeeType && errors.employeeType)}
+                helperText={touched.employeeType && errors.employeeType}
               >
                 <MenuItem value="full-time">Full-Time</MenuItem>
                 <MenuItem value="part-time">Part-Time</MenuItem>
@@ -232,6 +262,8 @@ const EditEmployee = () => {
                 type="number"
                 label="Base Salary"
                 variant="outlined"
+                error={Boolean(touched.baseSalary && errors.baseSalary)}
+                helperText={touched.baseSalary && errors.baseSalary}
               />
             </div>
 

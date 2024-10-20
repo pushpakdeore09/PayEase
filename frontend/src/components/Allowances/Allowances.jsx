@@ -58,7 +58,13 @@ const Allowances = () => {
           (allowance) => allowance.allowanceId !== allowanceId
         )
       );
-    } catch (error) {}
+    } catch (error) {
+      if (error.code === "ERR_NETWORK") {
+        toast.error("Service Unavailable", { autoClose: 2000 });
+      } else {
+        toast.error(error.response.body, { autoClose: 1500 });
+      }
+    }
   };
 
   return (

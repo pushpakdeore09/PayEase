@@ -50,7 +50,11 @@ const Tax = () => {
       toast.success(response.data, { autoClose: 2000 });
       setTaxes((prevTaxes) => prevTaxes.filter((tax) => tax.taxId !== taxId));
     } catch (error) {
-      toast.error(error.response.data, { autoClose: 2000 });
+      if (error.code === "ERR_NETWORK") {
+        toast.error("Service Unavailable", { autoClose: 2000 });
+      } else {
+        toast.error(error.response.data, { autoClose: 1500 });
+      }
     }
   };
   return (

@@ -6,6 +6,8 @@ export const signup = async (registerUser) => {
         return response.data;
         
     } catch (error) {
+        console.log(error);
+        
         throw error;
     }
 }

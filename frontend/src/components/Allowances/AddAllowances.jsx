@@ -39,13 +39,15 @@ const AddAllowances = () => {
 
   const handleSave = async (values, { resetForm }) => {
     try {
-      const response = await addAllowance(values);
-      toast.success(response.data, { autoClose: 2000 });
-      resetForm();
+        const response = await addAllowance(values);
+        toast.success(response.data, { autoClose: 2000 });
+        resetForm();
     } catch (error) {
-      toast.error(error.response.data, { autoClose: 2000 });
+       toast.error(error.response.data, { autoClose: 1500 });
+         
     }
-  };
+};
+
 
   const handleBack = () => {
     navigate(-1); 

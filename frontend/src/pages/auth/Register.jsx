@@ -41,7 +41,11 @@ const RegisterForm = () => {
         navigate('/signin')
       }, 2000);
     } catch (error) {
-      toast.error(error.response.data, {autoClose: 2000})
+      if (error.code === "ERR_NETWORK") {
+        toast.error("Service Unavailable", { autoClose: 2000 });
+      } else {
+        toast.error(error.response.body, { autoClose: 1500 });
+      }
     }
   };
 

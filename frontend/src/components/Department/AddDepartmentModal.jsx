@@ -36,9 +36,11 @@ const AddDepartmentModal = ({ open, handleClose }) => {
       resetForm();
       handleClose();
     } catch (error) {
-      toast.error(error?.response?.data || "An error occurred", {
-        autoClose: 2000,
-      });
+      if (error.code === "ERR_NETWORK") {
+        toast.error("Service Unavailable", { autoClose: 2000 });
+      } else {
+        toast.error(error.response.body, { autoClose: 1500 });
+      }
     }
   };
 
