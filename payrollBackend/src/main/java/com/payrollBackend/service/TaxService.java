@@ -42,6 +42,7 @@ public class TaxService {
         newtax.setTaxAmount(taxAmount);
         newtax.setEmployee(employee);
         taxRepository.save(newtax);
+        employeeService.updateNetSalary(employee);
         return new ResponseEntity<>("Tax added Successfully", HttpStatus.CREATED);
     }
 
@@ -62,7 +63,9 @@ public class TaxService {
         if(tax.isEmpty()){
             return new ResponseEntity<>("Tax not found", HttpStatus.BAD_REQUEST);
         }
+        Employee employee = tax.get().getEmployee();
         taxRepository.deleteById(taxId);
+        employeeService.updateNetSalary(employee);
         return new ResponseEntity<>("Tax removed Successfully", HttpStatus.OK);
     }
 
@@ -93,6 +96,7 @@ public class TaxService {
         existingTax.setTaxPercentage(taxDTO.getTaxPercentage());
         existingTax.setTaxAmount(taxAmount);
         taxRepository.save(existingTax);
+        employeeService.updateNetSalary(employee);
         return new ResponseEntity<>("Tax updated Successfully", HttpStatus.OK);
     }
 }

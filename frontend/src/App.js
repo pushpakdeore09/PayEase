@@ -28,6 +28,8 @@ import AddDeductions from "./components/Deductions/AddDeductions";
 import UpdateAllowance from "./components/Allowances/UpdateAllowance";
 import UpdateTax from "./components/Tax/UpdateTax";
 import UpdateDeduction from "./components/Deductions/UpdateDeduction";
+import PayrollReport from "./components/Report/PayrollReport";
+import PaySlip from "./components/Report/PaySlip";
 
 function AppContent() {
   const location = useLocation();
@@ -66,6 +68,8 @@ function AppContent() {
             path="/deduction/:deductionId/:employeeId"
             element={<UpdateDeduction />}
           />
+          <Route path="/payrollReport" element={<PayrollReport/>}/>
+          <Route path="/paySlip" element={<PaySlip/>}/>
         </Routes>
       </div>
     </div>

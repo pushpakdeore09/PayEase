@@ -218,6 +218,15 @@ const EmployeeManagement = () => {
                       fontWeight="bold"
                       sx={{ fontSize: "0.875rem" }}
                     >
+                      Net Salary
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography
+                      variant="h6"
+                      fontWeight="bold"
+                      sx={{ fontSize: "0.875rem" }}
+                    >
                       Joining Date
                     </Typography>
                   </TableCell>
@@ -272,7 +281,12 @@ const EmployeeManagement = () => {
                     </TableCell>
                     <TableCell>
                       <Typography sx={{ fontSize: "0.875rem" }}>
-                        {emp.baseSalary}
+                        ₹ {emp.baseSalary}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography sx={{ fontSize: "0.875rem" }}>
+                        ₹ {emp.netSalary}
                       </Typography>
                     </TableCell>
                     <TableCell>

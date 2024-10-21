@@ -44,6 +44,7 @@ public class AllowanceService {
         newAllowances.setAllowanceAmount(doubleAllowanceAmount);
         newAllowances.setEmployee(employee);
         allowanceRepository.save(newAllowances);
+        employeeService.updateNetSalary(employee);
         return new ResponseEntity<>("Allowance added Successfully", HttpStatus.CREATED);
     }
 
@@ -64,7 +65,9 @@ public class AllowanceService {
         if(allowance.isEmpty()){
             return new ResponseEntity<>("Allowance not found", HttpStatus.BAD_REQUEST);
         }
+        Employee employee = allowance.get().getEmployee();
         allowanceRepository.deleteById(allowanceId);
+        employeeService.updateNetSalary(employee);
         return new ResponseEntity<>("Allowance removed Successfully", HttpStatus.OK);
     }
 
@@ -96,6 +99,7 @@ public class AllowanceService {
         existingAllowance.setAllowancePercentage(allowanceDTO.getAllowancePercentage());
         existingAllowance.setAllowanceAmount(doubleAllowanceAmount);
         allowanceRepository.save(existingAllowance);
+        employeeService.updateNetSalary(employee);
         return new ResponseEntity<>("Allowance updated Successfully", HttpStatus.OK);
     }
 

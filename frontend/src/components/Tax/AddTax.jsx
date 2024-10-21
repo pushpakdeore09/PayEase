@@ -1,11 +1,17 @@
-import { Button, Divider, MenuItem, TextField, Typography } from '@mui/material';
-import { Field, Formik } from 'formik';
-import React from 'react'
+import {
+  Button,
+  Divider,
+  MenuItem,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { Field, Formik } from "formik";
+import React from "react";
 import * as Yup from "yup";
-import { Form } from 'formik';
-import { useNavigate } from 'react-router-dom';
-import { addTax } from '../api/taxApi';
-import { toast } from 'react-toastify';
+import { Form } from "formik";
+import { useNavigate } from "react-router-dom";
+import { addTax } from "../api/taxApi";
+import { toast } from "react-toastify";
 
 const AddTax = () => {
   const navigate = useNavigate();
@@ -29,30 +35,19 @@ const AddTax = () => {
       .min(0, "Tax percentage cannot be negative")
       .max(100, "Tax percentage cannot exceed 100"),
   });
-  
+
   const handleSave = async (values) => {
     try {
       const response = await addTax(values);
-      console.log(response.data);
-      
-      toast.success(response.data, {autoClose: 2000});
-      
+      toast.success(response, { autoClose: 2000 });
     } catch (error) {
-      console.log(error);
-      
-      toast.error(error.response, {autoClose: 2000});
-      if (error.code === "ERR_NETWORK") {
-        toast.error("Service Unavailable", { autoClose: 2000 });
-      } else {
-        toast.error(error.response.data, { autoClose: 1500 });
-      }
+      toast.error(error, { autoClose: 1500 });
     }
-    
-  }
+  };
 
   const handleBack = () => {
-    navigate("/tax")
-  }
+    navigate("/tax");
+  };
   return (
     <div className="flex flex-col p-4 space-y-6">
       <Typography variant="h4" className="text-3xl font-bold mb-4">
@@ -117,12 +112,8 @@ const AddTax = () => {
                 name="taxPercentage"
                 type="number"
                 variant="outlined"
-                error={
-                  touched.taxPercentage && !!errors.taxPercentage
-                }
-                helperText={
-                  touched.taxPercentage && errors.taxPercentage
-                }
+                error={touched.taxPercentage && !!errors.taxPercentage}
+                helperText={touched.taxPercentage && errors.taxPercentage}
               />
             </div>
 
@@ -147,7 +138,7 @@ const AddTax = () => {
         )}
       </Formik>
     </div>
-  )
-}
+  );
+};
 
 export default AddTax;

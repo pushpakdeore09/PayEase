@@ -3,9 +3,9 @@ import apiClient from "./apiClient";
 export const addTax =  async (taxData) => {
     try {
         const response = await apiClient.post("/addTax", taxData);
-        return response;
+        return response.data;
     } catch (error) {
-        throw error;
+        throw error.response.data;
     }
 }
 

@@ -62,11 +62,7 @@ const AddEmployee = () => {
         const response = await fetchAllDept();
         setDepartments(response.data);
       } catch (error) {
-        if (error.code === "ERR_NETWORK") {
-          toast.error("Service Unavailable", { autoClose: 2000 });
-        } else {
-          toast.error(error.response.body, { autoClose: 1500 });
-        }
+        toast.error(error.response.data, { autoClose: 1500 });
       }
     };
 
@@ -77,7 +73,7 @@ const AddEmployee = () => {
     const { dob, joiningDate } = values;
     const dobDate = new Date(dob);
     const joiningDateObj = new Date(joiningDate);
-  
+
     if (dobDate >= joiningDateObj) {
       toast.error("Date of Birth must be less than the Joining Date.", {
         autoClose: 2000,
@@ -88,7 +84,7 @@ const AddEmployee = () => {
       ...values,
       department: selectedDepartment,
     };
-  
+
     try {
       const response = await addEmployee(employeeData);
       const employeeId = response.data.employeeId;
@@ -102,11 +98,10 @@ const AddEmployee = () => {
       if (error.code === "ERR_NETWORK") {
         toast.error("Service Unavailable", { autoClose: 2000 });
       } else {
-        toast.error(error.response.body, { autoClose: 1500 });
+        toast.error(error.response.data, { autoClose: 1500 });
       }
     }
   };
-  
 
   return (
     <div className="flex flex-col p-4 space-y-6">

@@ -42,13 +42,9 @@ const AddPayroll = () => {
   const handleSave = async (values) => {
     try {
       const response = await addPayroll(values);
-      toast.success(response.data, { autoClose: 2000 });
+      toast.success(response, { autoClose: 2000 });
     } catch (error) {
-      if (error.code === "ERR_NETWORK") {
-        toast.error("Service Unavailable", { autoClose: 2000 });
-      } else {
-        toast.error(error.response.body, { autoClose: 1500 });
-      }
+      toast.error(error, { autoClose: 1500 });
     }
   };
 

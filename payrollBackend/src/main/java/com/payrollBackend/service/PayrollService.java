@@ -42,6 +42,7 @@ public class PayrollService {
         payroll.setPayrollMonth(payrollMonth);
         payroll.setEmployee(employee);
         payroll.setPayrollName(payrollDTO.getPayrollName().toUpperCase());
+
         payrollRepository.save(payroll);
         return new ResponseEntity<>("Payroll created Successfully", HttpStatus.CREATED);
     }
@@ -54,7 +55,6 @@ public class PayrollService {
             payrollDTO.setEmployeeId(payroll.getEmployee().getEmployeeId());
             payrollDTO.setMonthName(payroll.getPayrollMonth().getMonthName());
             payrollDTO.setYear(payroll.getPayrollMonth().getYear());
-
             return new ResponseEntity<>(payrollDTO, HttpStatus.OK);
         }
         return new ResponseEntity<>("Payroll not found", HttpStatus.BAD_REQUEST);

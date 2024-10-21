@@ -16,7 +16,6 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
-
 import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
@@ -26,11 +25,13 @@ const Sidebar = () => {
   const [openEmployeeMgmt, setOpenEmployeeMgmt] = useState(false);
   const [openPayroll, setOpenPayroll] = useState(false);
   const [openAllowDed, setOpenAllowDed] = useState(false); 
+  const [openReports, setOpenReports] = useState(false);
 
   const toggleGeneralSetup = () => setOpenGeneralSetup(!openGeneralSetup);
   const toggleEmployeeMgmt = () => setOpenEmployeeMgmt(!openEmployeeMgmt);
   const togglePayroll = () => setOpenPayroll(!openPayroll);
   const toggleAllowDed = () => setOpenAllowDed(!openAllowDed); 
+  const toggleReports = () => setOpenReports(!openReports); 
 
   const handleDepartment = () => {
     navigate("/department");
@@ -64,9 +65,21 @@ const Sidebar = () => {
       navigate("/tax")
   };
 
+  const handleHomePage = () => {
+    navigate("/home");
+  }
+
+  const handleReport = () => {
+    navigate("/payrollReport");
+  }
+
+  const handlePaySlip = () => {
+    navigate("/paySlip");
+  }
+
   return (
     <div className="w-80 bg-blue-700 min-h-screen text-white font-bold">
-      <h2 className="text-2xl font-bold text-center py-6">
+      <h2 className="text-2xl font-bold text-center py-6 cursor-pointer" onClick={handleHomePage}>
         Payroll Management System
       </h2>
       <div>
@@ -223,12 +236,37 @@ const Sidebar = () => {
           </List>
         </Collapse>
 
-        <ListItem button className="hover:bg-blue-600">
+        <ListItem button onClick={toggleReports} className="hover:bg-blue-600"> {/* Toggle Reports */}
           <ListItemIcon>
             <DescriptionIcon className="text-white" />
           </ListItemIcon>
           <ListItemText primary="Reports" className="text-2xl cursor-pointer" />
+          {openReports ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
+        <Collapse in={openReports} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListItem button className="ml-6 hover:bg-blue-600">
+              <ListItemIcon>
+                <DescriptionIcon className="text-white" />
+              </ListItemIcon>
+              <ListItemText
+                primary="Payroll Report"
+                className="text-2xl cursor-pointer"
+                onClick={handleReport}
+              />
+            </ListItem>
+            <ListItem button className="ml-6 hover:bg-blue-600">
+              <ListItemIcon>
+                <DescriptionIcon className="text-white" />
+              </ListItemIcon>
+              <ListItemText
+                primary="Pay Slip"
+                className="text-2xl cursor-pointer"
+                onClick={handlePaySlip}
+              />
+            </ListItem>
+          </List>
+        </Collapse>
       </List>
     </div>
   );

@@ -56,7 +56,7 @@ public class EmployeeService {
         newEmployee.setEmployeeType(employee.getEmployeeType());
         newEmployee.setDesignation(employee.getDesignation());
         newEmployee.setDepartment(department);
-        newEmployee.setNetSalary(0.0);
+        newEmployee.setNetSalary(employee.getBaseSalary());
         employeeRepository.save(newEmployee);
         if (department.getEmployeeCount() == null) {
             department.setEmployeeCount(1);
@@ -174,6 +174,21 @@ public class EmployeeService {
             tax.setTaxAmount(taxAmount.doubleValue());
             taxRepository.save(tax);
         }
+    }
+
+    public void updateNetSalary(Employee employee){
+        Double totalAllowances = allowanceRepository.findByEmployee_EmployeeId(employee.getEmployeeId())
+                .stream().mapToDouble(Allowances::getAllowanceAmount).sum();
+
+        Double totalDeductions = deductionRepository.findByEmployee_EmployeeId(employee.getEmployeeId())
+                .stream().mapToDouble(Deductions::getDeductionAmount).sum();
+
+        Double totalTax = taxRepository.findByEmployee_EmployeeId(employee.getEmployeeId())
+                .stream().mapToDouble(Tax::getTaxAmount).sum();
+
+        Double netSalary =  employee.getBaseSalary() + totalAllowances - totalDeductions - totalTax;
+        employee.setNetSalary(netSalary);
+        employeeRepository.save(employee);
     }
 
 }

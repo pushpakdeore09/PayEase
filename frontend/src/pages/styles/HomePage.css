@@ -1,0 +1,39 @@
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+  }
+  
+  .header-text {
+    margin-top: 20px;
+    margin-left: 20px;
+  }
+  
+  .avatar-container {
+    margin-right: 20px;
+  }
+  
+  .content-container {
+    padding: 20px;
+  }
+  
+  .card-grid {
+    margin-top: 20px;
+  }
+  
+  .feature-card {
+    background-color: #f7f7f7;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    text-align: center;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .feature-card .MuiTypography-h5 {
+    font-weight: bold;
+  }
+  

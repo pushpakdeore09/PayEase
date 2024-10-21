@@ -1,19 +1,35 @@
-import { Button, Divider, MenuItem, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  Divider,
+  MenuItem,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Field, Form, Formik } from "formik";
 import React from "react";
 import * as Yup from "yup";
-import { addPayrollMonth } from '../api/payrollMonthApi';
+import { addPayrollMonth } from "../api/payrollMonthApi";
 import { toast } from "react-toastify";
 
 const AddPayrollMonth = () => {
   const months = [
-    "January", "February", "March", "April", "May", "June", "July", "August", 
-    "September", "October", "November", "December"
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
   const monthDateRange = {
     January: { start: 1, end: 31 },
-    February: { start: 1, end: 28 }, 
+    February: { start: 1, end: 28 },
     March: { start: 1, end: 31 },
     April: { start: 1, end: 30 },
     May: { start: 1, end: 31 },
@@ -42,46 +58,62 @@ const AddPayrollMonth = () => {
     startDate: Yup.date()
       .required("Required")
       .nullable()
-      .test("is-valid-startDate", "Start date must be within the selected month", function (value) {
-        const { monthName, year } = this.parent;
-        if (!monthName || !value || !year) return true; 
-        const selectedMonthRange = monthDateRange[monthName];
-        const startDateMonth = new Date(value).getMonth() + 1;
-        const selectedMonthIndex = months.indexOf(monthName) + 1;
+      .test(
+        "is-valid-startDate",
+        "Start date must be within the selected month or year",
+        function (value) {
+          const { monthName, year } = this.parent;
+          if (!monthName || !value || !year) return true;
+          const selectedMonthRange = monthDateRange[monthName];
+          const startDateMonth = new Date(value).getMonth() + 1;
+          const selectedMonthIndex = months.indexOf(monthName) + 1;
 
-        return startDateMonth === selectedMonthIndex && new Date(value).getDate() >= selectedMonthRange.start;
-      }),
+          return (
+            startDateMonth === selectedMonthIndex &&
+            new Date(value).getDate() >= selectedMonthRange.start &&
+            new Date(value).getFullYear() === year
+          );
+        }
+      ),
     endDate: Yup.date()
       .required("Required")
       .nullable()
       .min(Yup.ref("startDate"), "End date must be after start date")
-      .test("is-different-endDate", "End date must be after start date", function (value) {
-        const { startDate } = this.parent;
-        return startDate && value && new Date(value) > new Date(startDate);
-      })
-      .test("is-valid-endDate", "End date must be within the selected month", function (value) {
-        const { monthName, year } = this.parent;
-        if (!monthName || !value || !year) return true; 
-        const selectedMonthRange = monthDateRange[monthName];
-        const endDateMonth = new Date(value).getMonth() + 1;
-        const selectedMonthIndex = months.indexOf(monthName) + 1;
+      .test(
+        "is-different-endDate",
+        "End date must be after start date",
+        function (value) {
+          const { startDate } = this.parent;
+          return startDate && value && new Date(value) > new Date(startDate);
+        }
+      )
+      .test(
+        "is-valid-endDate",
+        "End date must be within the selected month or year",
+        function (value) {
+          const { monthName, year } = this.parent;
+          if (!monthName || !value || !year) return true;
+          const selectedMonthRange = monthDateRange[monthName];
+          const endDateMonth = new Date(value).getMonth() + 1;
+          const selectedMonthIndex = months.indexOf(monthName) + 1;
 
-        return endDateMonth === selectedMonthIndex && new Date(value).getDate() <= selectedMonthRange.end;
-      }),
+          return (
+            endDateMonth === selectedMonthIndex &&
+            new Date(value).getDate() <= selectedMonthRange.end &&
+            new Date(value).getFullYear() === year
+          );
+        }
+      ),
   });
 
   const handleSubmit = async (values) => {
-    console.log(values);
-
     try {
       const response = await addPayrollMonth(values);
       toast.success(response.data, { autoClose: 2000 });
     } catch (error) {
-      if (error.code === "ERR_NETWORK") {
-        toast.error("Service Unavailable", { autoClose: 2000 });
-      } else {
-        toast.error(error.response.body, { autoClose: 1500 });
-      }
+      console.log(error);
+      
+      toast.error(error.response.data, { autoClose: 1500 });
     }
   };
 

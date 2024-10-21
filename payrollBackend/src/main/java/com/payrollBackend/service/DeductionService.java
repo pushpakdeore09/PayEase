@@ -43,6 +43,7 @@ public class DeductionService {
         newDeductions.setDeductionAmount(doubleDeductionAmount);
         newDeductions.setEmployee(employee);
         deductionRepository.save(newDeductions);
+        employeeService.updateNetSalary(employee);
         return new ResponseEntity<>("Deduction saved Successfully", HttpStatus.CREATED);
     }
 
@@ -63,8 +64,10 @@ public class DeductionService {
         if(deductionOptional.isEmpty()){
             return new ResponseEntity<>("Deduction not found", HttpStatus.BAD_REQUEST);
         }
+        Employee employee = deductionOptional.get().getEmployee();
         Deductions deduction = deductionOptional.get();
         deductionRepository.delete(deduction);
+        employeeService.updateNetSalary(employee);
         return new ResponseEntity<>("Deduction removed Successfully", HttpStatus.OK);
     }
 
@@ -95,6 +98,7 @@ public class DeductionService {
         existingDeduction.setDeductionAmount(doubleDeductionAmount);
         existingDeduction.setEmployee(employee);
         deductionRepository.save(existingDeduction);
+        employeeService.updateNetSalary(employee);
         return new ResponseEntity<>("Deduction updated Successfully", HttpStatus.OK);
 
     }

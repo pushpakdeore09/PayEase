@@ -26,8 +26,8 @@ const Payroll = () => {
   const [searchAttempted, setSearchAttempted] = useState(false);
 
   const handleAddPayroll = () => {
-    navigate('/addPayroll');
-  }
+    navigate("/addPayroll");
+  };
   const handleSearchChange = (event) => {
     setSearchInput(event.target.value);
   };
@@ -35,10 +35,7 @@ const Payroll = () => {
   const handleGetPayrolls = async () => {
     try {
       const response = await getAllPayrolls();
-      console.log(response.data);
-      
-      setPayrolls(response.data)
-      
+      setPayrolls(response.data);
     } catch (error) {
       if (error.code === "ERR_NETWORK") {
         toast.error("Service Unavailable", { autoClose: 2000 });
@@ -46,26 +43,22 @@ const Payroll = () => {
         toast.error(error.response.body, { autoClose: 1500 });
       }
     }
-  }
+  };
 
   const handleSearch = async () => {
     setSearchAttempted(true);
     try {
       const response = await getPayroll(searchInput);
-      
+
       const payrollData = response.data;
       if (payrollData) {
-        setPayrolls([payrollData]); 
+        setPayrolls([payrollData]);
       } else {
         toast.error("No payrolls found", { autoClose: 2000 });
         setPayrolls([]);
       }
     } catch (error) {
-      if (error.code === "ERR_NETWORK") {
-        toast.error("Service Unavailable", { autoClose: 2000 });
-      } else {
-        toast.error(error.response.body, { autoClose: 1500 });
-      }
+      toast.error(error.response.body, { autoClose: 1500 });
       setPayrolls([]);
     }
   };
@@ -76,7 +69,7 @@ const Payroll = () => {
         <Typography variant="h4" className="text-3xl font-bold mb-2 p-4">
           Payroll Dashboard
         </Typography>
-        <Divider sx={{ height: 4, bgcolor: "gray" }}/>
+        <Divider sx={{ height: 4, bgcolor: "gray" }} />
       </div>
       <div style={{ padding: "20px" }}>
         <Grid2 container spacing={2} alignItems="flex-end">
@@ -101,12 +94,22 @@ const Payroll = () => {
           </Grid2>
 
           <Grid2 item xs={2}>
-            <Button variant="contained" color="primary" fullWidth onClick={handleAddPayroll}>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={handleAddPayroll}
+            >
               Add New
             </Button>
           </Grid2>
           <Grid2 item xs={2}>
-            <Button variant="contained" color="secondary" fullWidth onClick={handleGetPayrolls}>
+            <Button
+              variant="contained"
+              color="secondary"
+              fullWidth
+              onClick={handleGetPayrolls}
+            >
               Get All Payrolls
             </Button>
           </Grid2>
@@ -158,7 +161,9 @@ const Payroll = () => {
                 {payrolls.map((payroll, index) => (
                   <TableRow key={index}>
                     <TableCell>
-                      <Typography variant="h6">{payroll.payrollName}</Typography>
+                      <Typography variant="h6">
+                        {payroll.payrollName}
+                      </Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant="h6">{payroll.employeeId}</Typography>

@@ -3,9 +3,9 @@ import apiClient from "./apiClient";
 export const addPayroll = async (payrollData) => {
     try {
         const response = await apiClient.post("/addPayroll", payrollData);
-        return response;
+        return response.data;
     } catch (error) {
-        throw error;
+        throw error.response.data;
     }
 }
 

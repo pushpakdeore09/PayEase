@@ -59,16 +59,10 @@ const PayrollMonth = () => {
 
   const handleSearch = async () => {
     try {
-      console.log("validation passed");
-      
       const response = await getPayrollMonth(searchValues);
       setSearchResults(response.data);
     } catch (error) {
-      if (error.code === "ERR_NETWORK") {
-        toast.error("Service Unavailable", { autoClose: 2000 });
-      } else {
-        toast.error(error.response.body, { autoClose: 1500 });
-      }
+      toast.error(error.response.data, { autoClose: 1500 });
     }
   };
 
