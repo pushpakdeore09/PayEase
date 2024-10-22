@@ -5,12 +5,12 @@ import {
   TextField,
   Button,
   MenuItem,
-  Box,
-  Grid2,
 } from "@mui/material";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { getPayrollReportData } from "../api/payrollReportApi";
+import generatePayrollReportPDF from "../../utils/pdfGenerator";
+
 
 const PayrollReport = () => {
   const months = [
@@ -36,16 +36,13 @@ const [searchValues, setSearchValues] = useState({
 
   const navigate = useNavigate();
 
-  const handleSearch = async () => {
+  const handlePayrollReport = async () => {
     try {
       const response = await getPayrollReportData(employeeId, searchValues);
-      console.log(response);
-      
+      generatePayrollReportPDF(response.data);
     } catch (error) {
-      console.log(error);
-      
+      toast.error(error, {autoClose: 2000});
     }
-    
   };
 
   const handleBack = () => {
@@ -64,6 +61,7 @@ const [searchValues, setSearchValues] = useState({
       <Divider sx={{ height: 4, bgcolor: "gray" }} />
       <div>
         <TextField
+        required
           fullWidth
           label="Employee Id"
           size="small"
@@ -75,6 +73,7 @@ const [searchValues, setSearchValues] = useState({
       <div className="grid grid-cols-2 gap-6 mt-4">
         <TextField
           fullWidth
+          required
           label="Payroll Month"
           size="small"
           select
@@ -92,6 +91,7 @@ const [searchValues, setSearchValues] = useState({
           ))}
         </TextField>
         <TextField
+        required
           fullWidth
           label="Year"
           size="small"
@@ -107,7 +107,7 @@ const [searchValues, setSearchValues] = useState({
         <Button variant="contained" color="secondary" onClick={handleBack}>
           Back
         </Button>
-        <Button variant="contained" color="primary" onClick={handleSearch}>
+        <Button variant="contained" color="primary" onClick={handlePayrollReport}>
           Get Payroll
         </Button>
         <Button variant="contained" color="success" onClick={handlePaySlip}>
