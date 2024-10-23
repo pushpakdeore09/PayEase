@@ -9,7 +9,7 @@ import {
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { getPayrollReportData } from "../api/payrollReportApi";
-import generatePayrollReportPDF from "../../utils/pdfGenerator";
+import { generatePayrollReportPDF } from "../../utils/pdfGenerator";
 
 
 const PayrollReport = () => {

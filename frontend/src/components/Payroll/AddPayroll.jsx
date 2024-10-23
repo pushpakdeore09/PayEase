@@ -10,8 +10,10 @@ import React from "react";
 import * as Yup from "yup";
 import { addPayroll } from "../api/payrollApi";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const AddPayroll = () => {
+  const navigate = useNavigate();
   const months = [
     "January",
     "February",
@@ -47,7 +49,9 @@ const AddPayroll = () => {
       toast.error(error, { autoClose: 1500 });
     }
   };
-
+  const handleBack = () => {
+    navigate(-1);
+  }
   return (
     <div className="flex flex-col p-4 space-y-6">
       <Typography variant="h4" className="text-3xl font-bold mb-4">
@@ -117,7 +121,15 @@ const AddPayroll = () => {
               />
             </div>
 
-            <div className="col-span-2 flex justify-center">
+            <div className="col-span-2 flex justify-center gap-5">
+            <Button
+                type="submit"
+                variant="contained"
+                color="secondary"
+                onClick={handleBack}
+              >
+                Back
+              </Button>
               <Button
                 type="submit"
                 variant="contained"

@@ -3,10 +3,10 @@ import { Formik, Form, Field } from "formik";
 import { TextField, Button, Link, Typography } from "@mui/material";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
-import  { signup } from '../../components/api/authApi';
-import { toast } from 'react-toastify';
+import { signup } from "../../components/api/authApi";
+import { toast } from "react-toastify";
 import "../styles/SignUpForm.css";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 const RegisterForm = () => {
   const initialValues = {
@@ -36,16 +36,12 @@ const RegisterForm = () => {
   const handleSubmit = async (values) => {
     try {
       const response = await signup(values);
-      toast.success(response, {autoClose: 1500});
+      toast.success(response, { autoClose: 1500 });
       setTimeout(() => {
-        navigate('/signin')
+        navigate("/signin");
       }, 2000);
     } catch (error) {
-      if (error.code === "ERR_NETWORK") {
-        toast.error("Service Unavailable", { autoClose: 2000 });
-      } else {
-        toast.error(error.response.body, { autoClose: 1500 });
-      }
+      toast.error(error.response.data, { autoClose: 1500 });
     }
   };
 
@@ -62,7 +58,10 @@ const RegisterForm = () => {
         <div className="bubble"></div>
       </div>
       <div className="w-full max-w-sm p-8 rounded-2xl shadow-lg space-y-5 bg-slate-200 z-10 relative">
-        <Typography variant="h3" className="text-center text-2xl text-white bg-blue-900 p-2 rounded-xl">
+        <Typography
+          variant="h3"
+          className="text-center text-2xl text-white bg-blue-900 p-2 rounded-xl"
+        >
           Sign up
         </Typography>
 

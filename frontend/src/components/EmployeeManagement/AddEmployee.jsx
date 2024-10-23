@@ -14,8 +14,10 @@ import { fetchAllDept } from "../api/deptApi";
 import { addEmployee } from "../api/employeeApi";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
 
 const AddEmployee = () => {
+  const navigate = useNavigate();
   const initialValues = {
     firstName: "",
     lastName: "",
@@ -69,6 +71,9 @@ const AddEmployee = () => {
     getAllDepartments();
   }, []);
 
+  const handleBack = () => {
+    navigate(-1);
+  }
   const handleSave = async (values, { resetForm }) => {
     const { dob, joiningDate } = values;
     const dobDate = new Date(dob);
@@ -295,10 +300,14 @@ const AddEmployee = () => {
               />
             </div>
 
-            <div className="flex justify-center col-span-2">
+            <div className="flex justify-center col-span-2 gap-5">
+            <Button type="submit" variant="contained" color="secondary" onClick={handleBack}>
+                Back
+              </Button>
               <Button type="submit" variant="contained" color="primary">
                 Save
               </Button>
+              
             </div>
           </Form>
         )}

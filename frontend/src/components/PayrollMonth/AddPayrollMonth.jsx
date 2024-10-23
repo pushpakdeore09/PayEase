@@ -10,8 +10,10 @@ import React from "react";
 import * as Yup from "yup";
 import { addPayrollMonth } from "../api/payrollMonthApi";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const AddPayrollMonth = () => {
+  const navigate = useNavigate();
   const months = [
     "January",
     "February",
@@ -105,7 +107,9 @@ const AddPayrollMonth = () => {
         }
       ),
   });
-
+  const handleBack = () => {
+    navigate(-1);
+  }
   const handleSubmit = async (values) => {
     try {
       const response = await addPayrollMonth(values);
@@ -194,7 +198,10 @@ const AddPayrollMonth = () => {
                 />
               </div>
 
-              <div className="flex justify-center col-span-2">
+              <div className="flex justify-center col-span-2 gap-5">
+              <Button type="submit" variant="contained" color="secondary" onClick={handleBack}>
+                  Back
+                </Button>
                 <Button type="submit" variant="contained" color="primary">
                   Save
                 </Button>

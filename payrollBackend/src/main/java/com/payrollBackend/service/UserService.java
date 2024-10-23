@@ -40,10 +40,8 @@ public class UserService {
         if (existingUser == null) {
             return new ResponseEntity<>("User does not exist!", HttpStatus.BAD_REQUEST);
         }
-        System.out.println("Stored hashed password: " + existingUser.getPassword());
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         boolean passwordMatch = passwordEncoder.matches(password, existingUser.getPassword());
-        System.out.println("Password match result: " + passwordMatch);
 
         if (passwordMatch && email.equals(existingUser.getEmail())) {
             existingUser.setPassword(null);

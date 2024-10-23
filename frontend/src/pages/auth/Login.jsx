@@ -23,10 +23,7 @@ const SignInForm = () => {
   const handleSubmit = async (values) => {
     try {
       const response = await signin(values);
-      console.log(response);
       const message = response.body;
-      console.log(message);
-
       if (
         message === "User does not exist!" ||
         message === "Invalid email or password"
@@ -36,14 +33,10 @@ const SignInForm = () => {
         toast.success("Login Successfully", { autoClose: 1500 });
         setTimeout(() => {
           navigate("/home");
-        }, 2000);
+        });
       }
     } catch (error) {
-      if (error.code === "ERR_NETWORK") {
-        toast.error("Service Unavailable", { autoClose: 2000 });
-      } else {
-        toast.error(error.response.body, { autoClose: 1500 });
-      }
+      toast.error(error.response.body, { autoClose: 1500 });
     }
   };
 
