@@ -32,9 +32,9 @@ const UpdateDeduction = () => {
         setDeduction(response.data);
       } catch (error) {
         if (error.code === "ERR_NETWORK") {
-          toast.error("Service Unavailable", { autoClose: 2000 });
+          toast.error("Service Unavailable", { autoClose: 1000 });
         } else {
-          toast.error(error.response.body, { autoClose: 1500 });
+          toast.error(error.response.body, { autoClose: 1000 });
         }
       }
     };
@@ -47,9 +47,9 @@ const UpdateDeduction = () => {
     }
     try {
       const response = await updateDeduction(updatedValues);
-      toast.success(response.data, {autoClose: 2000});
+      toast.success(response.data, {autoClose: 1000});
     } catch (error) {
-      toast.error(error.response.data, {autoClose: 2000});
+      toast.error(error.response.data, {autoClose: 1000});
     }
   }
   const handleBack = () => {

@@ -40,7 +40,7 @@ const UpdateAllowance = () => {
         setAllowance(response.data);
       } catch (error) {
         console.error(error);
-        toast.error(error.response.data, { autoClose: 2000 });
+        toast.error(error.response.data, { autoClose: 1000 });
       }
     };
     fetchAllowance();
@@ -53,13 +53,9 @@ const UpdateAllowance = () => {
     };
     try {
       const response = await updateAllowance(updatedValues);
-      toast.success(response.data, { autoClose: 2000 });
+      toast.success(response.data, { autoClose: 1000 });
     } catch (error) {
-      if (error.code === "ERR_NETWORK") {
-        toast.error("Service Unavailable", { autoClose: 2000 });
-      } else {
-        toast.error(error.response.body, { autoClose: 2000 });
-      }
+      toast.error(error.response.data, { autoClose: 1000 });
     }
   };
 

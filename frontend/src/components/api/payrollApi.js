@@ -14,7 +14,7 @@ export const getPayroll = async (payrollName) => {
         const response = await apiClient.get(`/payroll/${payrollName}`);
         return response;
     } catch (error) {
-        throw error;
+        throw error.response.data;
     }
 }
 

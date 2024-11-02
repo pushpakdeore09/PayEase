@@ -62,7 +62,7 @@ const PayrollMonth = () => {
       const response = await getPayrollMonth(searchValues);
       setSearchResults(response.data);
     } catch (error) {
-      toast.error(error.response.data, { autoClose: 1500 });
+      toast.error(error.response.data, { autoClose: 1000 });
     }
   };
 

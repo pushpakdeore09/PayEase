@@ -32,14 +32,14 @@ const AddDepartmentModal = ({ open, handleClose }) => {
   const handleAddDepartment = async (values, { resetForm }) => {
     try {
       const response = await addDepartment(values);
-      toast.success("Department added Successfully", { autoClose: 2000 });
+      toast.success("Department added Successfully", { autoClose: 1000 });
       resetForm();
       handleClose();
     } catch (error) {
       if (error.code === "ERR_NETWORK") {
-        toast.error("Service Unavailable", { autoClose: 2000 });
+        toast.error("Service Unavailable", { autoClose: 1000 });
       } else {
-        toast.error(error.response.body, { autoClose: 1500 });
+        toast.error(error.response.body, { autoClose: 1000 });
       }
     }
   };

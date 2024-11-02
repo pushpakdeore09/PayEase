@@ -113,7 +113,7 @@ const AddPayrollMonth = () => {
   const handleSubmit = async (values) => {
     try {
       const response = await addPayrollMonth(values);
-      toast.success(response.data, { autoClose: 2000 });
+      toast.success(response.data, { autoClose: 1000 });
     } catch (error) {
       console.log(error);
       

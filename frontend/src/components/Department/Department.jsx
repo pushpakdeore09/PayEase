@@ -46,14 +46,14 @@ const Department = () => {
       if (departmentData && departmentData.deptId) {
         setDepartments([departmentData]);
       } else {
-        toast.error("No department found", { autoClose: 2000 });
+        toast.error("No department found", { autoClose: 1000 });
         setDepartments([]); 
       }
     } catch (error) {
       if (error.code === "ERR_NETWORK") {
-        toast.error("Service Unavailable", { autoClose: 2000 });
+        toast.error("Service Unavailable", { autoClose: 1000 });
       } else {
-        toast.error(error.response.body, { autoClose: 1500 });
+        toast.error(error.response.body, { autoClose: 1000 });
       }
       setDepartments([]);
     }
@@ -63,7 +63,7 @@ const Department = () => {
   const handleDeleteDept = async (deptId) => {
     try {
       const response = await deleteDepartment(deptId);
-      toast.success(response, { autoClose: 2000 });
+      toast.success(response, { autoClose: 1000 });
       setDepartments((prevDepartments) =>
         prevDepartments.filter((department) => department.deptId !== deptId)
       );
@@ -78,7 +78,7 @@ const Department = () => {
       if (response.data && response.data.length > 0) {
         setDepartments(response.data); 
       } else {
-        toast.error("No departments found", { autoClose: 2000 });
+        toast.error("No departments found", { autoClose: 1000 });
         setDepartments([]); 
       }
     } catch (error) {

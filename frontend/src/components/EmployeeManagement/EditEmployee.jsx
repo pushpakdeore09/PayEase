@@ -11,12 +11,13 @@ import {
 } from "@mui/material";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { searchEmployee, updateEmployee } from "../api/employeeApi";
 import { fetchAllDept } from "../api/deptApi";
 import { toast } from "react-toastify";
 
 const EditEmployee = () => {
+  const navigate = useNavigate();
   const { employeeId } = useParams();
   const [employee, setEmployee] = useState(null);
   const [departments, setDepartments] = useState([]);
@@ -72,7 +73,7 @@ const EditEmployee = () => {
     baseSalary: Yup.number()
       .typeError("Base salary must be a number")
       .required("Required")
-      .moreThan(0, "Base salary must be greater than 0"), 
+      .moreThan(0, "Base salary must be greater than 0"),
     department: Yup.string().required("Required"),
   });
 
@@ -89,6 +90,10 @@ const EditEmployee = () => {
       toast.error(error.response.data, { autoClose: 2000 });
     }
   };
+
+  const handleBack = () => {
+    navigate(-1);
+  }
 
   if (!employee) {
     return <Typography>Loading...</Typography>;
@@ -267,7 +272,13 @@ const EditEmployee = () => {
               />
             </div>
 
-            <div className="flex justify-center col-span-2">
+            <div className="flex justify-center col-span-2 gap-5">
+              <Button
+                type="submit"
+                variant="contained"
+                color="secondary"
+                onClick={handleBack}
+              >Back</Button>
               <Button type="submit" variant="contained" color="primary">
                 Save Changes
               </Button>

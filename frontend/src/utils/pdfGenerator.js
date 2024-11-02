@@ -148,12 +148,10 @@ export const generatePayslipPDF = (data) => {
   try {
     const doc = new jsPDF();
 
-    // Add header
     doc.setFontSize(16);
     doc.text("Payslip", 105, 20, { align: "center" });
     doc.setFontSize(12);
 
-    // Employee and Payroll details
     const employeeDetails = [
       [
         "Employee Name",
@@ -184,41 +182,35 @@ export const generatePayslipPDF = (data) => {
       yPosition += 10;
     });
 
-    // Preparing Earnings and Deductions
     const earnings =
       data.allowances?.map((item) => [
-        item.allowanceName || "N/A", // Fallback if allowanceName is undefined
-        item.allowanceAmount != null ? item.allowanceAmount.toString() : "0", // Fallback if allowanceAmount is undefined
-      ]) || []; // Fallback to empty array if data.allowances is undefined
+        item.allowanceName || "N/A", 
+        item.allowanceAmount != null ? item.allowanceAmount.toString() : "0", 
+      ]) || []; 
 
     const deductions =
       data.deductions?.map((item) => [
-        item.deductionName || "N/A", // Fallback if name is undefined
-        item.deductionAmount != null ? item.deductionAmount.toString() : "0", // Fallback if amount is undefined
-      ]) || []; // Fallback to empty array if data.deductions is undefined
+        item.deductionName || "N/A", 
+        item.deductionAmount != null ? item.deductionAmount.toString() : "0", 
+      ]) || []; 
 
-    // Add taxes to deductions
     const taxes =
       data.taxes?.map((item) => [
-        item.taxName || "N/A", // Fallback if taxName is undefined
-        item.taxAmount != null ? item.taxAmount.toString() : "0", // Fallback if taxAmount is undefined
-      ]) || []; // Fallback to empty array if data.taxes is undefined
-
-    // Combine deductions and taxes
+        item.taxName || "N/A", 
+        item.taxAmount != null ? item.taxAmount.toString() : "0", 
+      ]) || []; 
     const combinedDeductions = [...deductions, ...taxes];
 
-    // AutoTable for Earnings and Deductions
     const rows = earnings.map((earning, index) => {
-      const deduction = combinedDeductions[index] || ["", ""]; // Fallback for undefined deductions
+      const deduction = combinedDeductions[index] || ["", ""]; 
       return [
-        earning[0], // Earnings name
-        earning[1], // Earnings amount
-        deduction[0], // Deductions name (optional)
-        deduction[1], // Deductions amount (optional)
+        earning[0], 
+        earning[1], 
+        deduction[0], 
+        deduction[1], 
       ];
     });
 
-    // Fill any remaining combined deductions that don't have corresponding earnings
     if (combinedDeductions.length > earnings.length) {
       for (let i = earnings.length; i < combinedDeductions.length; i++) {
         const deduction = combinedDeductions[i];
@@ -244,7 +236,6 @@ export const generatePayslipPDF = (data) => {
       pageBreak: "auto",
     });
 
-    // Calculate totals
     const totalEarnings = data.allowances.reduce(
       (sum, item) => sum + (item.allowanceAmount || 0),
       0
@@ -258,27 +249,23 @@ export const generatePayslipPDF = (data) => {
     const netSalary = data.employee.netSalary;
     const baseSalary = data.employee.baseSalary;
 
-    // Add totals after the table
     yPosition = doc.autoTable.previous.finalY + 10;
     doc.text(`Total Allowances: ${totalEarnings}`, 20, yPosition);
     doc.text(`Total Deductions: ${totalDeductions}`, 105, yPosition);
     doc.text(`Base Salary: ${baseSalary}`, 20, yPosition + 15);
     doc.text(`Net Salary: ${netSalary}`, 105, yPosition + 15);
 
-    // Add signatures
     yPosition += 40;
     doc.text("Employer Signature", 40, yPosition);
     doc.text("Employee Signature", 150, yPosition);
     doc.line(30, yPosition - 5, 80, yPosition - 5);
     doc.line(140, yPosition - 5, 190, yPosition - 5);
 
-    // Footer
     yPosition += 20;
     doc.text("This is a system-generated payslip", 105, yPosition, {
       align: "center",
     });
 
-    // Save the PDF
     doc.save(
       `${data.employee.firstName}_${data.employee.lastName}_Payslip.pdf`
     );

@@ -37,7 +37,7 @@ const Tax = () => {
       const response = await getTaxByEmployeeId(searchInput);
       setTaxes(response.data);
     } catch (error) {
-      toast.error(error.response.data, {autoClose: 2000});
+      toast.error(error.response.data, {autoClose: 1000});
     }
   };
   const handleUpdate = (taxId, employeeId) => {
@@ -47,13 +47,13 @@ const Tax = () => {
     try {
       const response = await deleteTax(taxId);
       console.log(response);
-      toast.success(response.data, { autoClose: 2000 });
+      toast.success(response.data, { autoClose: 1000 });
       setTaxes((prevTaxes) => prevTaxes.filter((tax) => tax.taxId !== taxId));
     } catch (error) {
       if (error.code === "ERR_NETWORK") {
-        toast.error("Service Unavailable", { autoClose: 2000 });
+        toast.error("Service Unavailable", { autoClose: 1000 });
       } else {
-        toast.error(error.response.data, { autoClose: 1500 });
+        toast.error(error.response.data, { autoClose: 1000 });
       }
     }
   };

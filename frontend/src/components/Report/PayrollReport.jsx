@@ -41,7 +41,7 @@ const [searchValues, setSearchValues] = useState({
       const response = await getPayrollReportData(employeeId, searchValues);
       generatePayrollReportPDF(response.data);
     } catch (error) {
-      toast.error(error, {autoClose: 2000});
+      toast.error(error, {autoClose: 1000});
     }
   };
 

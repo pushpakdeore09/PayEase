@@ -37,7 +37,7 @@ const Allowances = () => {
       
       setAllowances(allowanceData);
     } catch (error) {
-      toast.error(error.response.data, { autoClose: 2000 });
+      toast.error(error.response.data, { autoClose: 1000 });
     }
   };
 
@@ -52,7 +52,7 @@ const Allowances = () => {
   const handleDelete = async (allowanceId) => {
     try {
       const response = await deleteAllowance(allowanceId);
-      toast.success(response.data, { autoClose: 2000 });
+      toast.success(response.data, { autoClose: 1000 });
       setAllowances((prevAllowances) =>
         prevAllowances.filter(
           (allowance) => allowance.allowanceId !== allowanceId
@@ -60,9 +60,9 @@ const Allowances = () => {
       );
     } catch (error) {
       if (error.code === "ERR_NETWORK") {
-        toast.error("Service Unavailable", { autoClose: 2000 });
+        toast.error("Service Unavailable", { autoClose: 1000 });
       } else {
-        toast.error(error.response.body, { autoClose: 1500 });
+        toast.error(error.response.body, { autoClose: 1000 });
       }
     }
   };

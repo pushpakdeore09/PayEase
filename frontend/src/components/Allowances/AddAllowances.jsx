@@ -40,10 +40,10 @@ const AddAllowances = () => {
   const handleSave = async (values, { resetForm }) => {
     try {
         const response = await addAllowance(values);
-        toast.success(response.data, { autoClose: 2000 });
+        toast.success(response.data, { autoClose: 1000 });
         resetForm();
     } catch (error) {
-       toast.error(error.response.data, { autoClose: 1500 });
+       toast.error(error.response.data, { autoClose: 1000 });
          
     }
 };

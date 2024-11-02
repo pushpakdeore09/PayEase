@@ -13,7 +13,7 @@ import { getTaxById, updateTax } from "../api/taxApi";
 import { toast } from "react-toastify";
 
 const UpdateTax = () => {
-    const { taxId } = useParams();
+  const { taxId } = useParams();
   const navigate = useNavigate();
   const taxTypes = ["Direct Tax"];
   const [tax, setTax] = useState(null);
@@ -33,39 +33,35 @@ const UpdateTax = () => {
 
   useEffect(() => {
     const fetchTax = async () => {
-        try {
-            const response = await getTaxById(taxId);
-            setTax(response.data);
-        } catch (error) {
-          if (error.code === "ERR_NETWORK") {
-            toast.error("Service Unavailable", { autoClose: 2000 });
-          } else {
-            toast.error(error.response.body, { autoClose: 1500 });
-          }
+      try {
+        const response = await getTaxById(taxId);
+        setTax(response.data);
+      } catch (error) {
+        if (error.code === "ERR_NETWORK") {
+          toast.error("Service Unavailable", { autoClose: 1000 });
+        } else {
+          toast.error(error.response.body, { autoClose: 1000 });
         }
+      }
     };
     fetchTax();
-  },[taxId])
+  }, [taxId]);
   const handleUpdate = async (values) => {
     const updatedValues = {
-        ...values,
-        taxId: taxId,
+      ...values,
+      taxId: taxId,
     };
     try {
-        const response = await updateTax(updatedValues);
-        toast.success(response.data, {autoClose: 2000});
+      const response = await updateTax(updatedValues);
+      toast.success(response.data, { autoClose: 1000 });
     } catch (error) {
-      if (error.code === "ERR_NETWORK") {
-        toast.error("Service Unavailable", { autoClose: 2000 });
-      } else {
-        toast.error(error.response.body, { autoClose: 1500 });
-      }
+      toast.error(error.response.data, { autoClose: 1000 });
     }
-  }
+  };
 
   const handleBack = () => {
     navigate(-1);
-  }
+  };
   return (
     <div className="flex flex-col p-4 space-y-6">
       <Typography variant="h4" className="text-3xl font-bold mb-4">

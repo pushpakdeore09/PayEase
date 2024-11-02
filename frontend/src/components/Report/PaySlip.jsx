@@ -43,7 +43,7 @@ const PaySlip = () => {
       
       generatePayslipPDF(response.data);
     } catch (error) {
-      toast.error(error, { autoClose: 2000 });
+      toast.error(error, { autoClose: 1000 });
     }
   };
   return (

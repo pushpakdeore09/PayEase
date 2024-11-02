@@ -39,9 +39,9 @@ const AddDeductions = () => {
   const handleSave = async (values) => {
     try {
       const response = await addDeductions(values);
-      toast.success(response, { autoClose: 2000 });
+      toast.success(response, { autoClose: 1000 });
     } catch (error) {
-      toast.error(error, { autoClose: 1500 });
+      toast.error(error, { autoClose: 1000 });
     }
   };
 

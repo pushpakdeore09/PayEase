@@ -27,7 +27,7 @@ public class PayrollService {
 
     public ResponseEntity<String> createPayroll(PayrollDTO payrollDTO) throws Exception {
         Payroll oldPayroll = payrollRepository.findByPayrollName(payrollDTO.getPayrollName());
-        if(oldPayroll != null){
+        if(oldPayroll != null && oldPayroll.getEmployee().getEmployeeId().equals(payrollDTO.getEmployeeId())){
             return new ResponseEntity<>("Payroll already exists", HttpStatus.CONFLICT);
         }
         Employee employee = employeeService.findByEmployeeId(payrollDTO.getEmployeeId());

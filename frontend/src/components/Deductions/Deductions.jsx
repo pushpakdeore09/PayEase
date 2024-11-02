@@ -36,9 +36,9 @@ const Deductions = () => {
       setDeductions(deductionData);
     } catch (error) {
       if (error.code === "ERR_NETWORK") {
-        toast.error("Service Unavailable", { autoClose: 2000 });
+        toast.error("Service Unavailable", { autoClose: 1000 });
       } else {
-        toast.error(error.response.data, { autoClose: 1500 });
+        toast.error(error.response.data, { autoClose: 1000 });
       }
     }
   };
@@ -54,14 +54,14 @@ const Deductions = () => {
   const handleDelete = async (deductionId) => {
     try {
       const response = await deleteDeduction(deductionId);
-      toast.success(response.data, { autoClose: 2000 });
+      toast.success(response.data, { autoClose: 1000 });
       setDeductions((prevDeductions) =>
         prevDeductions.filter(
           (deduction) => deduction.deductionId !== deductionId
         )
       );
     } catch (error) {
-      toast.error(error.response?.data, { autoClose: 2000 });
+      toast.error(error.response?.data, { autoClose: 1000 });
     }
   };
 

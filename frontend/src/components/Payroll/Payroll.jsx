@@ -37,11 +37,7 @@ const Payroll = () => {
       const response = await getAllPayrolls();
       setPayrolls(response.data);
     } catch (error) {
-      if (error.code === "ERR_NETWORK") {
-        toast.error("Service Unavailable", { autoClose: 2000 });
-      } else {
-        toast.error(error.response.body, { autoClose: 1500 });
-      }
+      toast.error(error.response.data, { autoClose: 1000 });
     }
   };
 
@@ -53,12 +49,9 @@ const Payroll = () => {
       const payrollData = response.data;
       if (payrollData) {
         setPayrolls([payrollData]);
-      } else {
-        toast.error("No payrolls found", { autoClose: 2000 });
-        setPayrolls([]);
       }
     } catch (error) {
-      toast.error(error.response.body, { autoClose: 1500 });
+      toast.error(error, { autoClose: 1000 });
       setPayrolls([]);
     }
   };

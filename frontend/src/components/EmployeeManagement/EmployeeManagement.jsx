@@ -44,11 +44,11 @@ const EmployeeManagement = () => {
   const handleDeleteEmployee = async (employeeId) => {
     try {
       const response = await deleteEmployee(employeeId);
-      toast.success(response.data, {autoClose: 2000});
+      toast.success(response.data, {autoClose: 1000});
       handleGetAllEmployees(); 
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data, {autoClose: 2000});
+      toast.error(error.response.data, {autoClose: 1000});
     }
   };
 
@@ -70,7 +70,7 @@ const EmployeeManagement = () => {
       if (response.data && response.data.length > 0) {
         setEmployees(response.data);
       } else {
-        toast.error("No employees found", { autoClose: 2000 });
+        toast.error("No employees found", { autoClose: 1000 });
         setEmployees([]);
       }
     } catch (error) {

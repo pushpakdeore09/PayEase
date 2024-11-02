@@ -135,6 +135,7 @@ public class EmployeeService {
         existingEmployee.setJoiningDate(employee.getJoiningDate());
         existingEmployee.setEmployeeType(employee.getEmployeeType());
         existingEmployee.setBaseSalary(newBaseSalary);
+        existingEmployee.setNetSalary(newBaseSalary);
         if (employee.getDepartment() != null) {
             existingEmployee.setDepartment(employee.getDepartment());
         }
