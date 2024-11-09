@@ -33,18 +33,17 @@ The PayEase System is designed to efficiently manage employee payroll, allowance
    cd backend
 
 ## Configure MySQL Database:
-
 ### Open application.properties in src/main/resources.
 Update the following properties:
- - spring.datasource.url=jdbc:mysql://localhost:3306/payroll
- - spring.datasource.username=<your-mysql-username>
- - spring.datasource.password=<your-mysql-password>
+  spring.datasource.url=jdbc:mysql://localhost:3306/payroll
+  spring.datasource.username=<your-mysql-username>
+  spring.datasource.password=<your-mysql-password>
 
 ### Run the backend application:
 ./mvnw spring-boot:run
 
 ## Frontend Setup
- - cd frontend
- - npm install
- - npm start
- - 
+  cd frontend
+  npm install
+  npm start
+  
