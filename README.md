@@ -39,14 +39,15 @@ Update the following properties:
   spring.datasource.url=jdbc:mysql://localhost:3306/payroll
   spring.datasource.username=<your-mysql-username>
   spring.datasource.password=<your-mysql-password>
+```
 
-### Run the backend application:
+## Run the backend application:
 ```bash
 ./mvnw spring-boot:run
-
+```
 ## Frontend Setup
 ```bash
   cd frontend
   npm install
   npm start
-  
+```
