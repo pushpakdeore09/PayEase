@@ -30,7 +30,7 @@ The PayEase System is designed to efficiently manage employee payroll, allowance
 1. Clone the repository and navigate to the backend directory:
    ```bash
    git clone <repository-url>
-   cd backend
+   cd payrollBackend
 
 ## Configure MySQL Database:
 ### Open application.properties in src/main/resources.
