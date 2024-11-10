@@ -49,6 +49,6 @@ public class PayrollMonthService {
         if(payrollMonths.isEmpty()){
             return null;
         }
-        return payrollMonths.getFirst();
+        return payrollMonths.get(0);
     }
 }

@@ -135,7 +135,7 @@ public class EmployeeService {
         existingEmployee.setJoiningDate(employee.getJoiningDate());
         existingEmployee.setEmployeeType(employee.getEmployeeType());
         existingEmployee.setBaseSalary(newBaseSalary);
-        existingEmployee.setNetSalary(newBaseSalary);
+        updateNetSalary(employee);
         if (employee.getDepartment() != null) {
             existingEmployee.setDepartment(employee.getDepartment());
         }
@@ -144,7 +144,6 @@ public class EmployeeService {
     }
 
     private void updateAllowanceAndDeductionAndTax(Employee employee, Double newBaseSalary) {
-        System.out.println("Calculating");
         List<Allowances> allowances = allowanceRepository.findByEmployee_EmployeeId(employee.getEmployeeId());
         List<Deductions> deductions = deductionRepository.findByEmployee_EmployeeId(employee.getEmployeeId());
         List<Tax> taxes = taxRepository.findByEmployee_EmployeeId(employee.getEmployeeId());
