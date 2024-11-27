@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-    baseURL: "http://localhost:8080/"
+    baseURL: "https://payease-server-production.up.railway.app/"
 })
 
 export default apiClient;
