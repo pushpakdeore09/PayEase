@@ -12,5 +12,5 @@ import java.util.List;
 public interface PayrollRepository extends JpaRepository<Payroll, Integer> {
     Payroll findByPayrollName(String payrollName);
     List<Payroll> findByEmployee(Employee employee);
-    Payroll findByEmployee_EmployeeId(Integer employeeId);
+    Payroll findByEmployee_EmployeeIdAndPayrollMonth_PayrollMonthId(Integer employeeId, Integer payrollMonthId);
 }

@@ -46,10 +46,8 @@ const Payroll = () => {
     try {
       const response = await getPayroll(searchInput);
 
-      const payrollData = response.data;
-      if (payrollData) {
-        setPayrolls([payrollData]);
-      }
+      setPayrolls(response);
+      
     } catch (error) {
       toast.error(error, { autoClose: 1000 });
       setPayrolls([]);
@@ -68,10 +66,11 @@ const Payroll = () => {
         <Grid2 container spacing={2} alignItems="flex-end">
           <Grid2 item xs={10} size={8}>
             <TextField
-              label="Payroll Name"
+              label="Employee Id"
               variant="outlined"
               size="small"
               fullWidth
+              type="number"
               value={searchInput}
               onChange={handleSearchChange}
               InputProps={{

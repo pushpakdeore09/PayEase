@@ -9,10 +9,11 @@ export const addPayroll = async (payrollData) => {
     }
 }
 
-export const getPayroll = async (payrollName) => {
+export const getPayroll = async (employeeId) => {
     try {
-        const response = await apiClient.get(`/payroll/${payrollName}`);
-        return response;
+        const response = await apiClient.get(`/payroll/${employeeId}`);
+        
+        return response.data;
     } catch (error) {
         throw error.response.data;
     }

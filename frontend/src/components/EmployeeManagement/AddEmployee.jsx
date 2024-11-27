@@ -31,23 +31,61 @@ const AddEmployee = () => {
     baseSalary: "",
     department: "",
   };
-
   const validationSchema = Yup.object({
-    firstName: Yup.string().required("Required"),
-    lastName: Yup.string().required("Required"),
+    firstName: Yup.string()
+      .matches(/^(?!\s).*$/, "No leading whitespace allowed")
+      .required("Required"),
+  
+    lastName: Yup.string()
+      .matches(/^(?!\s).*$/, "No leading whitespace allowed")
+      .required("Required"),
+  
     gender: Yup.string().required("Required"),
-    dob: Yup.date().required("Required").nullable(),
-    address: Yup.string().required("Required"),
-    email: Yup.string().required("Required"),
-    designation: Yup.string().required("Required"),
+  
+    dob: Yup.date()
+      .required("Required")
+      .nullable()
+      .test("dob-not-in-future", "Date of Birth cannot be in the future", (value) => {
+        const currentDate = new Date();
+        return value ? value <= currentDate : true;
+      })
+      .test("dob-before-joining", "Date of Birth must be before the Joining Date", function (value) {
+        const { joiningDate } = this.parent; 
+  
+        if (value && joiningDate) {
+          const dobDate = new Date(value); 
+          const joiningDateObj = new Date(joiningDate); 
+          return dobDate < joiningDateObj;
+        }
+  
+        return true; 
+      }),
+  
+    address: Yup.string()
+      .matches(/^(?!\s).*$/, "No leading whitespace allowed")
+      .required("Required"),
+  
+    email: Yup.string()
+      .matches(/^(?!\s).*$/, "No leading whitespace allowed")
+      .email("Invalid email format")
+      .required("Email is required"),
+  
+    designation: Yup.string()
+      .matches(/^(?!\s).*$/, "No leading whitespace allowed")
+      .required("Required"),
+  
     joiningDate: Yup.date().required("Required").nullable(),
+  
     employeeType: Yup.string().required("Required"),
+  
     baseSalary: Yup.number()
       .typeError("Base salary must be a number")
       .required("Required"),
-    department: Yup.string().required("Required"),
+  
+    department: Yup.string()
+      .matches(/^(?!\s).*$/, "No leading whitespace allowed")
+      .required("Required"),
   });
-
   const employeeTypes = [
     { value: "full-time", label: "Full-Time" },
     { value: "part-time", label: "Part-Time" },

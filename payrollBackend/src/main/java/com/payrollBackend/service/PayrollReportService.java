@@ -42,7 +42,8 @@ public class PayrollReportService {
         if(existingPayrollMonth == null){
             return new ResponseEntity<>("Payroll Month not found", HttpStatus.BAD_REQUEST);
         }
-        Payroll payroll = payrollRepository.findByEmployee_EmployeeId(employee.getEmployeeId());
+
+        Payroll payroll = payrollRepository.findByEmployee_EmployeeIdAndPayrollMonth_PayrollMonthId(employee.getEmployeeId(), existingPayrollMonth.getPayrollMonthId());
         if(payroll == null){
             return new ResponseEntity<>("Payroll not found", HttpStatus.BAD_REQUEST);
         }
@@ -70,7 +71,7 @@ public class PayrollReportService {
         if(existingPayrollMonth == null){
             return new ResponseEntity<>("Payroll Month not found", HttpStatus.BAD_REQUEST);
         }
-        Payroll payroll = payrollRepository.findByEmployee_EmployeeId(employee.getEmployeeId());
+        Payroll payroll = payrollRepository.findByEmployee_EmployeeIdAndPayrollMonth_PayrollMonthId(employee.getEmployeeId(), existingPayrollMonth.getPayrollMonthId());
         if(payroll == null){
             return new ResponseEntity<>("Payroll not found", HttpStatus.BAD_REQUEST);
         }

@@ -47,17 +47,28 @@ public class PayrollService {
         return new ResponseEntity<>("Payroll created Successfully", HttpStatus.CREATED);
     }
 
-    public ResponseEntity<?> findPayrollByName(String payrollName){
-        Payroll payroll = payrollRepository.findByPayrollName(payrollName);
-        if (payroll != null && payroll.getPayrollName().equalsIgnoreCase(payrollName)) {
-            PayrollDTO payrollDTO = new PayrollDTO();
-            payrollDTO.setPayrollName(payroll.getPayrollName().toUpperCase());
-            payrollDTO.setEmployeeId(payroll.getEmployee().getEmployeeId());
-            payrollDTO.setMonthName(payroll.getPayrollMonth().getMonthName());
-            payrollDTO.setYear(payroll.getPayrollMonth().getYear());
-            return new ResponseEntity<>(payrollDTO, HttpStatus.OK);
+    public ResponseEntity<?> findPayrollByEmployee(Integer employeeId) {
+        Employee employee = employeeService.findByEmployeeId(employeeId);
+        // Fetch all payrolls for the given employee
+        List<Payroll> payrollList = payrollRepository.findByEmployee(employee); // Adjusted for method name
+
+        if (payrollList != null && !payrollList.isEmpty()) {
+            // Map the payroll records to DTOs
+            List<PayrollDTO> payrollDTOList = payrollList.stream().map(payroll -> {
+                PayrollDTO payrollDTO = new PayrollDTO();
+                payrollDTO.setPayrollName(payroll.getPayrollName().toUpperCase()); // Assuming payrollName is a string in the Payroll entity
+                payrollDTO.setEmployeeId(payroll.getEmployee().getEmployeeId());
+                payrollDTO.setMonthName(payroll.getPayrollMonth().getMonthName());
+                payrollDTO.setYear(payroll.getPayrollMonth().getYear());
+                return payrollDTO;
+            }).collect(Collectors.toList());
+
+            // Return the list of PayrollDTOs as the response
+            return new ResponseEntity<>(payrollDTOList, HttpStatus.OK);
+        } else {
+            // If no payrolls found, return an appropriate message
+            return new ResponseEntity<>("Payroll not found", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Payroll not found", HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<?> findAllPayrolls() {

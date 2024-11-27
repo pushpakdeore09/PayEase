@@ -25,8 +25,11 @@ const initialValues = {
 }
 
 const validationSchema = Yup.object().shape({
-  deptName: Yup.string().required("Department name is required"),
+  deptName: Yup.string()
+    .matches(/^\S(.*\S)?$/, "No leading or trailing whitespace allowed") 
+    .required("Department name is required"),
 });
+
 
 const AddDepartmentModal = ({ open, handleClose }) => {
   const handleAddDepartment = async (values, { resetForm }) => {

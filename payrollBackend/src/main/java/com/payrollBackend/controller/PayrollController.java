@@ -19,9 +19,9 @@ public class PayrollController {
         return payrollService.createPayroll(payrollDTO);
     }
 
-    @GetMapping(value = "/payroll/{payrollName}")
-    public ResponseEntity<?> getPayroll(@PathVariable String payrollName){
-        return payrollService.findPayrollByName(payrollName);
+    @GetMapping(value = "/payroll/{employeeId}")
+    public ResponseEntity<?> getPayroll(@PathVariable Integer employeeId){
+        return payrollService.findPayrollByEmployee(employeeId);
     }
 
     @GetMapping(value = "/payrolls")

@@ -21,9 +21,12 @@ const SignInForm = () => {
   });
 
   const handleSubmit = async (values) => {
+    console.log("login data", values);
     try {
       const response = await signin(values);
       const message = response.body;
+      console.log(response);
+      
       if (
         message === "User does not exist!" ||
         message === "Invalid email or password"

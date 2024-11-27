@@ -9,6 +9,7 @@ export const generatePayrollReportPDF = (data) => {
     doc.setFont("Helvetica", "bold");
     doc.text("Payroll Report", 14, 20);
 
+    // Employee Details Section
     doc.setFontSize(14);
     doc.setFont("Helvetica", "bold");
     doc.text("Employee Details:", 14, 40);
@@ -47,9 +48,12 @@ export const generatePayrollReportPDF = (data) => {
     });
 
     yPosition += 20;
+
+    // Department Details Section
     doc.setFontSize(14);
     doc.setFont("Helvetica", "bold");
     doc.text("Department Details:", 14, yPosition);
+
     const departmentInfo = [
       ["Department ID:", String(data.department.deptId)],
       ["Department Name:", data.department.deptName],
@@ -72,9 +76,12 @@ export const generatePayrollReportPDF = (data) => {
     });
 
     yPosition += 20;
+
+    // Payroll Month Details Section
     doc.setFontSize(14);
     doc.setFont("Helvetica", "bold");
     doc.text("Payroll Month Details:", 14, yPosition);
+
     const payrollMonthInfo = [
       ["Month Name:", data.payrollMonth.monthName],
       ["Year:", String(data.payrollMonth.year)],
@@ -101,6 +108,8 @@ export const generatePayrollReportPDF = (data) => {
     });
 
     yPosition += 20;
+
+    // Allowances Section
     doc.setFontSize(14);
     doc.setFont("Helvetica", "bold");
     doc.text("Allowances:", 14, yPosition);
@@ -119,6 +128,8 @@ export const generatePayrollReportPDF = (data) => {
     });
 
     yPosition = doc.autoTable.previous.finalY + 10;
+
+    // Deductions Section
     doc.setFontSize(14);
     doc.setFont("Helvetica", "bold");
     doc.text("Deductions:", 14, yPosition);
@@ -136,13 +147,34 @@ export const generatePayrollReportPDF = (data) => {
       startY: yPosition + 10,
     });
 
+    yPosition = doc.autoTable.previous.finalY + 10;
+
+    // Taxes Section - New Table for Taxes
+    doc.setFontSize(14);
+    doc.setFont("Helvetica", "bold");
+    doc.text("Taxes:", 14, yPosition);
+
+    const taxData = data.taxes.map((tax) => [
+      tax.taxName,
+      tax.taxType,
+      `${tax.taxPercentage}%`,
+      String(tax.taxAmount),
+    ]);
+
+    doc.autoTable({
+      head: [["Tax Name", "Tax Type", "Percentage", "Amount"]],
+      body: taxData,
+      startY: yPosition + 10,
+    });
+
     doc.save(`${data.employee.firstName} ${data.employee.lastName}.pdf`);
   } catch (error) {
-    toast.error("Some error occured. Please try again later!", {
+    toast.error("Some error occurred. Please try again later!", {
       autoClose: 2000,
     });
   }
 };
+
 
 export const generatePayslipPDF = (data) => {
   try {
